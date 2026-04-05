@@ -279,7 +279,7 @@
     <div class="ba-slider" data-mode="sequence"
          data-graded-path="AD seq color/loop"
          data-ungraded-path="AD Seq no color/loop"
-         data-start="100" data-end="142" data-ext=".jpg">
+         data-frames="100,107,114,121,128,135,142" data-ext=".jpg">
       <!-- Base graded image -->
       <img class="base-img frame-seq active" src="AD%20seq%20color/loop100.jpg" alt="Graded">
       <!-- Before (ungraded) wrap -->
@@ -302,7 +302,7 @@
   <div class="ba-slider" data-mode="sequence"
        data-graded-path="brax seq colored/Multicam"
        data-ungraded-path="brax seq no color/Multicam"
-       data-start="101" data-end="111" data-ext=".jpg">
+       data-frames="101,103,105,107,109,111" data-ext=".jpg">
     <img class="base-img frame-seq active" src="brax%20seq%20colored/Multicam101.jpg" alt="Graded">
     <div class="before-wrap">
       <img class="frame-seq active" src="brax%20seq%20no%20color/Multicam101.jpg" alt="Ungraded">
@@ -479,18 +479,13 @@ const _preloadCache = []; // keep references so GC doesn't dump them
 document.querySelectorAll('.ba-slider[data-mode="sequence"]').forEach(slider => {
   const gradedPath = slider.dataset.gradedPath;
   const ungradedPath = slider.dataset.ungradedPath;
-  const start = parseInt(slider.dataset.start);
-  const end = parseInt(slider.dataset.end);
+  const frameNums = slider.dataset.frames.split(',').map(Number);
   const ext = slider.dataset.ext;
-  const totalFrames = end - start + 1;
+  const totalFrames = frameNums.length;
 
   // Build frame arrays (URL-encode spaces for web delivery)
-  const gradedFrames = [];
-  const ungradedFrames = [];
-  for (let i = start; i <= end; i++) {
-    gradedFrames.push(encodeURI(gradedPath + i + ext));
-    ungradedFrames.push(encodeURI(ungradedPath + i + ext));
-  }
+  const gradedFrames = frameNums.map(n => encodeURI(gradedPath + n + ext));
+  const ungradedFrames = frameNums.map(n => encodeURI(ungradedPath + n + ext));
 
   // Preload all frames and KEEP references in memory
   gradedFrames.forEach(src => { const img = new Image(); img.src = src; _preloadCache.push(img); });

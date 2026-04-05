@@ -16,5 +16,29 @@ freelance-colorist-guide.md
 marketing/
 .claude/
 
+# Unused sequence frames (kept locally, not deployed)
+# AD: only deploy 100,107,114,121,128,135,142
+AD seq color/loop10[1-6].jpg
+AD seq color/loop10[8-9].jpg
+AD seq color/loop11[0-3].jpg
+AD seq color/loop11[5-9].jpg
+AD seq color/loop12[0,2-7].jpg
+AD seq color/loop12[9].jpg
+AD seq color/loop13[0-4,6-9].jpg
+AD seq color/loop14[0-1].jpg
+AD Seq no color/loop10[1-6].jpg
+AD Seq no color/loop10[8-9].jpg
+AD Seq no color/loop11[0-3].jpg
+AD Seq no color/loop11[5-9].jpg
+AD Seq no color/loop12[0,2-7].jpg
+AD Seq no color/loop12[9].jpg
+AD Seq no color/loop13[0-4,6-9].jpg
+AD Seq no color/loop14[0-1].jpg
+# BRAX: only deploy 101,103,105,107,109,111
+brax seq colored/Multicam10[02468].jpg
+brax seq colored/Multicam110.jpg
+brax seq no color/Multicam10[02468].jpg
+brax seq no color/Multicam110.jpg
+
 # OS files
 .DS_Store
