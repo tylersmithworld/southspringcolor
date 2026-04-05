@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>South Spring Color — Professional Color Grading</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #fafafa;
+    --surface: #fff;
+    --surface-2: #f5f5f5;
+    --text: #111;
+    --text-secondary: #666;
+    --accent: #111;
+    --border: #e0e0e0;
+    --max-width: 1080px;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ─── NAV ─── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(250,250,250,0.9);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+  }
+  nav .inner {
+    max-width: var(--max-width);
+    margin: 0 auto; padding: 0 2rem;
+    height: 56px; display: flex; align-items: center; justify-content: space-between;
+  }
+  nav .logo { font-weight: 600; font-size: 0.95rem; letter-spacing: -0.01em; }
+  nav .nav-cta {
+    padding: 0.45rem 1.2rem; background: var(--accent); color: #fff;
+    text-decoration: none; border-radius: 6px; font-size: 0.8rem; font-weight: 500;
+    transition: opacity 0.2s;
+  }
+  nav .nav-cta:hover { opacity: 0.8; }
+
+  /* ─── HERO (first widescreen slider) ─── */
+  .hero {
+    max-width: var(--max-width); margin: 0 auto;
+    padding: 80px 2rem 0;
+  }
+  .hero-slider-wrap {
+    position: relative;
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .hero-overlay {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    padding: 2.5rem 2rem;
+    background: linear-gradient(0deg, rgba(0,0,0,0.6) 0%, transparent 100%);
+    z-index: 4; pointer-events: none;
+  }
+  .hero-overlay h1 {
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 700; letter-spacing: -0.03em; line-height: 1.1;
+    color: #fff; margin-bottom: 0.3rem;
+  }
+  .hero-overlay p {
+    font-size: 1rem; color: rgba(255,255,255,0.75); font-weight: 300;
+  }
+
+  /* ─── SECOND WIDE SLIDER ─── */
+  .wide-slider-section {
+    max-width: var(--max-width); margin: 0 auto;
+    padding: 1.5rem 2rem 0;
+  }
+  .wide-slider-section .ba-slider {
+    border-radius: 14px;
+  }
+
+  /* ─── BA SLIDER (shared) ─── */
+  .ba-slider {
+    position: relative; width: 100%; overflow: hidden;
+    cursor: col-resize; user-select: none; -webkit-user-select: none;
+  }
+  .ba-slider img.base-img {
+    display: block; width: 100%; height: auto;
+    -webkit-user-drag: none; pointer-events: none;
+  }
+  .ba-slider .before-wrap {
+    position: absolute; top: 0; right: 0;
+    width: 67%; height: 100%; overflow: hidden;
+  }
+  .ba-slider .before-wrap img {
+    position: absolute; top: 0; right: 0;
+    height: 100%; object-fit: cover; max-width: none;
+    -webkit-user-drag: none; pointer-events: none;
+  }
+  .ba-slider .handle {
+    position: absolute; top: 0; right: 67%;
+    width: 2px; height: 100%;
+    background: rgba(255,255,255,0.6);
+    transform: translateX(50%);
+    pointer-events: none; z-index: 2;
+  }
+  .ba-slider .handle::after {
+    content: ''; position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 36px; height: 36px; border-radius: 50%;
+    background: rgba(255,255,255,0.2); backdrop-filter: blur(8px);
+    border: 2px solid rgba(255,255,255,0.6);
+  }
+  .ba-slider .handle .arrows {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%); z-index: 1;
+    font-size: 0.65rem; color: #fff; pointer-events: none;
+    letter-spacing: 0.25em;
+  }
+  .ba-slider .label {
+    position: absolute; top: 12px;
+    font-size: 0.55rem; text-transform: uppercase; letter-spacing: 0.12em;
+    color: #fff; background: rgba(0,0,0,0.45); padding: 2px 8px;
+    border-radius: 3px; z-index: 5; pointer-events: none;
+    transition: opacity 0.2s;
+  }
+  .ba-slider .label-before { right: 12px; }
+  .ba-slider .label-after { left: 12px; }
+
+  /* Hide all sequence frames except the active one */
+  .ba-slider .frame-seq { display: none; }
+  .ba-slider .frame-seq.active { display: block; }
+
+  /* ─── SECTION HELPERS ─── */
+  .section { max-width: var(--max-width); margin: 0 auto; padding: 0 2rem; }
+  .section-pad { padding-top: 4rem; padding-bottom: 4rem; }
+  .divider {
+    max-width: var(--max-width); margin: 0 auto; padding: 0 2rem;
+    border-top: 1px solid var(--border);
+  }
+
+  /* ─── VERTICAL SLIDERS (side by side) ─── */
+  .vert-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;
+  }
+  .vert-grid .ba-slider {
+    border-radius: 10px;
+  }
+
+  /* ─── SERVICES ─── */
+  .services-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem;
+  }
+  .service-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 2rem 1.5rem; text-align: center;
+    position: relative; transition: border-color 0.2s;
+  }
+  .service-card:hover { border-color: #bbb; }
+  .service-card.featured { border-color: var(--accent); }
+  .service-card .badge {
+    position: absolute; top: -10px; left: 50%; transform: translateX(-50%);
+    background: var(--accent); color: #fff; font-size: 0.6rem; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.1em;
+    padding: 3px 12px; border-radius: 100px;
+  }
+  .service-card .tier {
+    font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--text-secondary); margin-bottom: 0.75rem;
+  }
+  .service-card .price {
+    font-size: 2rem; font-weight: 700; letter-spacing: -0.03em;
+    margin-bottom: 0.25rem;
+  }
+  .service-card .price-note {
+    font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 1.5rem;
+  }
+  .service-card ul {
+    list-style: none; text-align: left; margin-bottom: 2rem;
+  }
+  .service-card ul li {
+    font-size: 0.8rem; color: var(--text-secondary); padding: 0.4rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .service-card ul li::before {
+    content: '✓'; margin-right: 0.6rem; color: var(--accent); font-weight: 600;
+  }
+  .service-card .card-btn {
+    display: block; width: 100%; padding: 0.7rem;
+    border: 1px solid var(--border); background: transparent;
+    color: var(--text); border-radius: 8px; font-size: 0.85rem;
+    font-weight: 500; cursor: pointer; transition: all 0.2s;
+    text-decoration: none; text-align: center; font-family: inherit;
+  }
+  .service-card .card-btn:hover { background: var(--surface-2); border-color: #bbb; }
+  .service-card.featured .card-btn {
+    background: var(--accent); color: #fff; border-color: var(--accent);
+  }
+  .service-card.featured .card-btn:hover { opacity: 0.85; }
+
+  /* ─── BOOKING FORM ─── */
+  .booking-section { max-width: 580px; margin: 0 auto; }
+  .form-group select {
+    width: 100%; padding: 0.75rem 1rem;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 8px; color: var(--text); font-family: inherit;
+    font-size: 0.9rem; transition: border-color 0.2s; outline: none;
+    cursor: pointer; appearance: none;
+  }
+  .form-group select:focus { border-color: #999; }
+  .delivery-note {
+    font-size: 0.75rem; color: var(--text-secondary);
+    text-align: center; margin-top: 1.5rem; line-height: 1.6;
+  }
+  .booking-section h2 {
+    font-size: 1.8rem; font-weight: 700; letter-spacing: -0.03em;
+    text-align: center; margin-bottom: 0.5rem;
+  }
+  .booking-section .booking-sub {
+    text-align: center; color: var(--text-secondary);
+    font-size: 0.9rem; margin-bottom: 2.5rem;
+  }
+  .form-group { margin-bottom: 1.25rem; }
+  .form-group label {
+    display: block; font-size: 0.75rem; font-weight: 500;
+    margin-bottom: 0.4rem; color: var(--text-secondary);
+    text-transform: uppercase; letter-spacing: 0.06em;
+  }
+  .form-group input, .form-group textarea {
+    width: 100%; padding: 0.75rem 1rem;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 8px; color: var(--text); font-family: inherit;
+    font-size: 0.9rem; transition: border-color 0.2s; outline: none;
+  }
+  .form-group input:focus, .form-group textarea:focus { border-color: #999; }
+  .form-group textarea { resize: vertical; min-height: 110px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .submit-btn {
+    display: block; width: 100%; padding: 0.9rem;
+    background: var(--accent); color: #fff; border: none; border-radius: 8px;
+    font-size: 0.95rem; font-weight: 600; cursor: pointer;
+    font-family: inherit; transition: opacity 0.2s; margin-top: 0.5rem;
+  }
+  .submit-btn:hover { opacity: 0.8; }
+
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 2rem; text-align: center;
+    font-size: 0.7rem; color: var(--text-secondary);
+  }
+
+  @media (max-width: 768px) {
+    .hero { padding: 70px 1rem 0; }
+    .wide-slider-section { padding: 1rem 1rem 0; }
+    .hero-overlay { padding: 1.5rem 1.25rem; }
+    .vert-grid { grid-template-columns: 1fr; max-width: 400px; margin: 0 auto; }
+    .services-grid { grid-template-columns: 1fr; max-width: 380px; margin: 0 auto; }
+    .form-row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="inner">
+    <div class="logo">South Spring Color</div>
+    <a href="#book" class="nav-cta">Book Now</a>
+  </div>
+</nav>
+
+<!-- HERO — AD desert motorcycle (frame-advance slider) -->
+<section class="hero">
+  <div class="hero-slider-wrap">
+    <div class="ba-slider" data-mode="sequence"
+         data-graded-path="AD seq color/loop"
+         data-ungraded-path="AD Seq no color/loop"
+         data-start="100" data-end="142" data-ext=".jpg">
+      <!-- Base graded image -->
+      <img class="base-img frame-seq active" src="AD seq color/loop100.jpg" alt="Graded">
+      <!-- Before (ungraded) wrap -->
+      <div class="before-wrap">
+        <img class="frame-seq active" src="AD Seq no color/loop100.jpg" alt="Ungraded">
+      </div>
+      <div class="handle"><span class="arrows">◂ ▸</span></div>
+      <span class="label label-after">Graded</span>
+      <span class="label label-before">Ungraded</span>
+    </div>
+    <div class="hero-overlay">
+      <h1>South Spring Color</h1>
+      <p>Professional Color Grading</p>
+    </div>
+  </div>
+</section>
+
+<!-- SECOND WIDE — BRAX guitar (frame-advance slider) -->
+<section class="wide-slider-section">
+  <div class="ba-slider" data-mode="sequence"
+       data-graded-path="brax seq colored/Multicam"
+       data-ungraded-path="brax seq no color/Multicam"
+       data-start="101" data-end="111" data-ext=".jpg">
+    <img class="base-img frame-seq active" src="brax seq colored/Multicam101.jpg" alt="Graded">
+    <div class="before-wrap">
+      <img class="frame-seq active" src="brax seq no color/Multicam101.jpg" alt="Ungraded">
+    </div>
+    <div class="handle"><span class="arrows">◂ ▸</span></div>
+    <span class="label label-after">Graded</span>
+    <span class="label label-before">Ungraded</span>
+  </div>
+</section>
+
+<!-- VERTICAL SLIDERS (static, side by side) -->
+<section class="section section-pad">
+  <div class="vert-grid">
+
+    <div class="ba-slider" data-mode="static" style="border-radius:10px;">
+      <img class="base-img" src="lunar color lumix.jpg" alt="Graded">
+      <div class="before-wrap">
+        <img src="lunar no color lumix.jpg" alt="Ungraded">
+      </div>
+      <div class="handle"><span class="arrows">◂ ▸</span></div>
+      <span class="label label-after">Graded</span>
+      <span class="label label-before">Ungraded</span>
+    </div>
+
+    <div class="ba-slider" data-mode="static" style="border-radius:10px;">
+      <img class="base-img" src="IMG_8167.00_00_04_07.Still001.jpg" alt="Graded">
+      <div class="before-wrap">
+        <img src="IMG_8167.00_00_04_07.Still002.jpg" alt="Ungraded">
+      </div>
+      <div class="handle"><span class="arrows">◂ ▸</span></div>
+      <span class="label label-after">Graded</span>
+      <span class="label label-before">Ungraded</span>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SERVICES -->
+<section class="section section-pad" id="services">
+  <div class="section-label" style="margin-bottom:1.5rem;">Services & Pricing</div>
+  <div class="services-grid">
+    <div class="service-card">
+      <div class="tier">Small</div>
+      <div class="price">$500</div>
+      <div class="price-note">1–5 files</div>
+      <ul>
+        <li>Full creative grade</li>
+        <li>2 revision rounds</li>
+        <li>LUTs + graded ProRes delivery</li>
+        <li>Dropbox delivery</li>
+      </ul>
+      <a href="https://buy.stripe.com/4gM14mdQ6gt6e9gf5g8N200" class="card-btn" target="_blank">Pay & Start</a>
+    </div>
+    <div class="service-card featured">
+      <div class="badge">Most Popular</div>
+      <div class="tier">Medium</div>
+      <div class="price">$1,200</div>
+      <div class="price-note">6–15 files</div>
+      <ul>
+        <li>Full creative grade</li>
+        <li>Look development</li>
+        <li>2 revision rounds</li>
+        <li>LUTs + graded ProRes delivery</li>
+      </ul>
+      <a href="https://buy.stripe.com/00w7sKfYegt62qy9KW8N201" class="card-btn" target="_blank">Pay & Start</a>
+    </div>
+    <div class="service-card">
+      <div class="tier">Large</div>
+      <div class="price">Custom</div>
+      <div class="price-note">15+ files</div>
+      <ul>
+        <li>Full creative grade</li>
+        <li>Look development</li>
+        <li>Unlimited revisions</li>
+        <li>All deliverables included</li>
+      </ul>
+      <a href="#book" class="card-btn">Get a Quote</a>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- BOOKING -->
+<section class="section section-pad" id="book">
+  <div class="booking-section">
+    <h2>Project Details</h2>
+    <p class="booking-sub">Already paid? Fill this out so I know what you need.</p>
+    <form id="bookingForm" action="https://formsubmit.co/jobs@southspringcolor.com" method="POST">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Name</label>
+          <input type="text" name="name" placeholder="Your name" required>
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" name="email" placeholder="you@email.com" required>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>How many files?</label>
+          <select name="file_count" required>
+            <option value="" disabled selected>Select</option>
+            <option value="1-5">1–5 files ($500)</option>
+            <option value="6-15">6–15 files ($1,200)</option>
+            <option value="15+">15+ files (custom quote)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Camera / Format</label>
+          <select name="camera">
+            <option value="" disabled selected>What was it shot on?</option>
+            <option value="arri">ARRI (LogC / ARRIRAW)</option>
+            <option value="red">RED (REDcode RAW)</option>
+            <option value="sony">Sony (S-Log3)</option>
+            <option value="blackmagic">Blackmagic (BRAW)</option>
+            <option value="panasonic">Panasonic (V-Log)</option>
+            <option value="canon">Canon (C-Log)</option>
+            <option value="iphone">iPhone / mobile</option>
+            <option value="gopro">GoPro</option>
+            <option value="other">Other / not sure</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Desired Look</label>
+        <textarea name="look" placeholder="Describe the vibe — warm, cold, filmic, natural, stylized? Reference any films, shows, or music videos you want it to feel like."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Reference Images (optional)</label>
+        <input type="text" name="references" placeholder="Paste a link to stills, a mood board, or a Google Drive folder">
+      </div>
+
+      <div class="form-group">
+        <label>Delivery Format</label>
+        <select name="delivery">
+          <option value="prores" selected>ProRes 422 HQ (standard)</option>
+          <option value="h264">H.264 (web / social)</option>
+          <option value="dnxhr">DNxHR (Avid)</option>
+          <option value="dpx">DPX sequence</option>
+          <option value="other">Other (specify in notes)</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Anything else?</label>
+        <textarea name="notes" placeholder="Timeline, special requirements, anything I should know…" style="min-height:70px;"></textarea>
+      </div>
+
+      <button type="submit" class="submit-btn">Submit</button>
+
+      <p class="delivery-note">
+        All projects delivered via Dropbox with graded files + LUTs.<br>
+        Best results from log/flat footage — but I work with whatever you've got.
+      </p>
+    </form>
+  </div>
+</section>
+
+<footer>
+  &copy; 2026 South Spring Color. All rights reserved.
+</footer>
+
+<script>
+// ─── PRELOAD ALL SEQUENCE FRAMES ───
+document.querySelectorAll('.ba-slider[data-mode="sequence"]').forEach(slider => {
+  const gradedPath = slider.dataset.gradedPath;
+  const ungradedPath = slider.dataset.ungradedPath;
+  const start = parseInt(slider.dataset.start);
+  const end = parseInt(slider.dataset.end);
+  const ext = slider.dataset.ext;
+  const totalFrames = end - start + 1;
+
+  // Build frame arrays
+  const gradedFrames = [];
+  const ungradedFrames = [];
+  for (let i = start; i <= end; i++) {
+    gradedFrames.push(gradedPath + i + ext);
+    ungradedFrames.push(ungradedPath + i + ext);
+  }
+
+  // Preload all frames
+  gradedFrames.forEach(src => { const img = new Image(); img.src = src; });
+  ungradedFrames.forEach(src => { const img = new Image(); img.src = src; });
+
+  // Store on element
+  slider._gradedFrames = gradedFrames;
+  slider._ungradedFrames = ungradedFrames;
+  slider._totalFrames = totalFrames;
+  slider._currentFrame = 0;
+});
+
+// ─── UNIFIED SLIDER LOGIC ───
+document.querySelectorAll('.ba-slider').forEach(slider => {
+  const beforeWrap = slider.querySelector('.before-wrap');
+  const handle = slider.querySelector('.handle');
+  const beforeImg = beforeWrap.querySelector('img');
+  const baseImg = slider.querySelector(':scope > img.base-img');
+  const labelAfter = slider.querySelector('.label-after');
+  const labelBefore = slider.querySelector('.label-before');
+  const isSequence = slider.dataset.mode === 'sequence';
+  let active = false;
+
+  function setPosition(x) {
+    const rect = slider.getBoundingClientRect();
+    let pct = (x - rect.left) / rect.width;
+    pct = Math.max(0, Math.min(1, pct));
+
+    // Position the split
+    const rightPct = 1 - pct;
+    beforeWrap.style.width = rightPct * 100 + '%';
+    handle.style.right = rightPct * 100 + '%';
+    handle.style.left = 'auto';
+    beforeImg.style.width = rect.width + 'px';
+
+    // Fade labels at edges
+    if (labelAfter) labelAfter.style.opacity = pct < 0.08 ? 0 : 1;
+    if (labelBefore) labelBefore.style.opacity = pct > 0.92 ? 0 : 1;
+
+    // Frame advance for sequence sliders
+    if (isSequence && slider._totalFrames) {
+      const frameIdx = Math.min(
+        Math.floor(pct * slider._totalFrames),
+        slider._totalFrames - 1
+      );
+      if (frameIdx !== slider._currentFrame) {
+        slider._currentFrame = frameIdx;
+        baseImg.src = slider._gradedFrames[frameIdx];
+        beforeImg.src = slider._ungradedFrames[frameIdx];
+      }
+    }
+  }
+
+  slider.addEventListener('pointerdown', e => {
+    active = true;
+    slider.setPointerCapture(e.pointerId);
+    setPosition(e.clientX);
+  });
+  slider.addEventListener('pointermove', e => {
+    if (active) setPosition(e.clientX);
+  });
+  slider.addEventListener('pointerup', () => active = false);
+  slider.addEventListener('pointercancel', () => active = false);
+
+  // Init sizing + set initial frame for sequences
+  function initSize() {
+    beforeImg.style.width = slider.offsetWidth + 'px';
+    // Set initial frame to ~33% for sequence sliders
+    if (isSequence && slider._totalFrames) {
+      const initFrame = Math.floor(0.33 * slider._totalFrames);
+      slider._currentFrame = initFrame;
+      baseImg.src = slider._gradedFrames[initFrame];
+      beforeImg.src = slider._ungradedFrames[initFrame];
+    }
+  }
+  if (baseImg.complete) initSize();
+  else baseImg.addEventListener('load', initSize);
+  window.addEventListener('resize', initSize);
+});
+</script>
+
+</body>
+</html>

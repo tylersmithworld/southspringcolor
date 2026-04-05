@@ -1,0 +1,20 @@
+# Video files
+*.MOV
+*.mov
+*.mp4
+
+# Resolve stills & project files
+*.dpx
+*.drx
+
+# Practice / course stills (not for site)
+Still 2026-*
+
+# Non-site files
+COLOR GRADING COURSE.md
+freelance-colorist-guide.md
+marketing/
+.claude/
+
+# OS files
+.DS_Store
