@@ -216,14 +216,33 @@
     font-size: 0.75rem; color: var(--text-secondary);
     text-align: center; margin-top: 1.5rem; line-height: 1.6;
   }
+  .positioning-line {
+    font-size: 1.05rem; color: var(--text-secondary); line-height: 1.7;
+    max-width: 560px; margin: 0 auto;
+  }
+  .steps-row {
+    display: flex; justify-content: center; gap: 2.5rem;
+    max-width: 650px; margin: 0 auto;
+  }
+  .step { display: flex; align-items: center; gap: 0.6rem; }
+  .step-num {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--accent); color: #fff;
+    font-size: 0.75rem; font-weight: 600;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .step-text { font-size: 0.85rem; color: var(--text-secondary); }
+  .value-tag {
+    display: inline-block; margin-left: 0.4rem;
+    font-size: 0.65rem; font-weight: 600; color: var(--accent);
+    background: var(--surface-2); padding: 1px 6px; border-radius: 3px;
+  }
   .pricing-notes {
     max-width: 600px; margin: 2rem auto 0; text-align: center; line-height: 1.7;
   }
   .pricing-notes p {
     font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 0.8rem;
-  }
-  .pricing-notes .revision-note {
-    font-size: 0.72rem; color: #999; margin-top: 0.5rem;
   }
   .booking-section h2 {
     font-size: 1.8rem; font-weight: 700; letter-spacing: -0.03em;
@@ -268,6 +287,7 @@
     .hero-overlay { padding: 1.5rem 1.25rem; }
     .vert-grid { grid-template-columns: 1fr; max-width: 400px; margin: 0 auto; }
     .services-grid { grid-template-columns: 1fr; max-width: 380px; margin: 0 auto; }
+    .steps-row { flex-direction: column; gap: 1rem; align-items: flex-start; padding: 0 1rem; }
     .form-row { grid-template-columns: 1fr; }
   }
 </style>
@@ -278,7 +298,7 @@
 <nav>
   <div class="inner">
     <div class="logo">South Spring Color</div>
-    <a href="#book" class="nav-cta">Book Now</a>
+    <a href="#services" class="nav-cta">Get Started</a>
   </div>
 </nav>
 
@@ -300,7 +320,7 @@
       <span class="label label-before">Ungraded</span>
     </div>
     <div class="hero-overlay">
-      <h1>South Spring Color</h1>
+      <h1>From flat to final.</h1>
       <p>Professional Color Grading</p>
     </div>
   </div>
@@ -351,12 +371,27 @@
 
 <div class="divider"></div>
 
+<!-- POSITIONING -->
+<section class="section section-pad" style="text-align:center;">
+  <p class="positioning-line">I've graded music videos, live sessions, and studio content out of DelPalma in LA — bringing the same eye to every project.</p>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="section" style="padding-bottom:3rem;">
+  <div class="steps-row">
+    <div class="step"><span class="step-num">1</span><span class="step-text">Book your tier</span></div>
+    <div class="step"><span class="step-num">2</span><span class="step-text">Upload your footage</span></div>
+    <div class="step"><span class="step-num">3</span><span class="step-text">Get graded files in 3–5 days</span></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
 <!-- SERVICES -->
 <section class="section section-pad" id="services">
-  <div class="section-label" style="margin-bottom:1.5rem;">Services & Pricing</div>
   <div class="services-grid">
     <div class="service-card">
-      <div class="tier">Small</div>
+      <div class="tier">Single</div>
       <div class="price">$500</div>
       <div class="price-note">1–5 files</div>
       <ul>
@@ -364,35 +399,34 @@
         <li>2 revision rounds</li>
         <li>Graded files + LUTs</li>
       </ul>
-      <a href="https://buy.stripe.com/4gM14mdQ6gt6e9gf5g8N200" class="card-btn" target="_blank">Book Now</a>
+      <a href="https://buy.stripe.com/4gM14mdQ6gt6e9gf5g8N200" class="card-btn" target="_blank">Start Your Grade</a>
     </div>
     <div class="service-card featured">
       <div class="badge">Most Popular</div>
-      <div class="tier">Medium</div>
+      <div class="tier">Project</div>
       <div class="price">$1,200</div>
-      <div class="price-note">6–15 files</div>
+      <div class="price-note">6–15 files <span class="value-tag">~$80/file</span></div>
       <ul>
         <li>Full creative color grade</li>
-        <li>Unlimited revisions*</li>
+        <li>Unlimited revisions for 60 days</li>
         <li>Graded files + LUTs</li>
       </ul>
-      <a href="https://buy.stripe.com/00w7sKfYegt62qy9KW8N201" class="card-btn" target="_blank">Book Now</a>
+      <a href="https://buy.stripe.com/00w7sKfYegt62qy9KW8N201" class="card-btn" target="_blank">Start Your Grade</a>
     </div>
     <div class="service-card">
-      <div class="tier">Large</div>
+      <div class="tier">Campaign</div>
       <div class="price">Custom</div>
       <div class="price-note">15+ files</div>
       <ul>
         <li>Full creative color grade</li>
-        <li>Unlimited revisions*</li>
+        <li>Unlimited revisions for 60 days</li>
         <li>Graded files + LUTs</li>
       </ul>
-      <a href="#book" class="card-btn">Get a Quote</a>
+      <a href="#book" class="card-btn">Let's Scope It</a>
     </div>
   </div>
   <div class="pricing-notes">
-    <p>All projects delivered via Dropbox. I grade footage from any source — ARRI, RED, Sony, Blackmagic, Canon, iPhone, GoPro — in log, ProRes, RAW, or whatever you've got.</p>
-    <p class="revision-note">*Unlimited revisions valid for 60 days from project start.</p>
+    <p>All projects delivered via Dropbox. I grade footage from any source — ARRI, RED, Sony, Blackmagic, Canon, iPhone, GoPro, DJI — in log, ProRes, RAW, or whatever you've got.</p>
   </div>
 </section>
 
@@ -401,8 +435,8 @@
 <!-- BOOKING -->
 <section class="section section-pad" id="book">
   <div class="booking-section">
-    <h2>Project Details</h2>
-    <p class="booking-sub">Already paid? Fill this out so I know what you need.</p>
+    <h2>Let's get started</h2>
+    <p class="booking-sub">Tell me about your project.</p>
     <form id="bookingForm" action="https://formsubmit.co/jobs@southspringcolor.com" method="POST">
       <div class="form-row">
         <div class="form-group">
@@ -413,6 +447,16 @@
           <label>Email</label>
           <input type="email" name="email" placeholder="you@email.com" required>
         </div>
+      </div>
+
+      <div class="form-group">
+        <label>Desired Look</label>
+        <textarea name="look" placeholder="Describe the vibe — warm, cold, filmic, natural, stylized? Reference any films, shows, or music videos you want it to feel like."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Reference Images (optional)</label>
+        <input type="text" name="references" placeholder="Paste a link to stills, a mood board, or a Google Drive folder">
       </div>
 
       <div class="form-row">
@@ -435,21 +479,12 @@
             <option value="blackmagic">Blackmagic (BRAW)</option>
             <option value="panasonic">Panasonic (V-Log)</option>
             <option value="canon">Canon (C-Log)</option>
+            <option value="dji">DJI (D-Log)</option>
             <option value="iphone">iPhone / mobile</option>
             <option value="gopro">GoPro</option>
             <option value="other">Other / not sure</option>
           </select>
         </div>
-      </div>
-
-      <div class="form-group">
-        <label>Desired Look</label>
-        <textarea name="look" placeholder="Describe the vibe — warm, cold, filmic, natural, stylized? Reference any films, shows, or music videos you want it to feel like."></textarea>
-      </div>
-
-      <div class="form-group">
-        <label>Reference Images (optional)</label>
-        <input type="text" name="references" placeholder="Paste a link to stills, a mood board, or a Google Drive folder">
       </div>
 
       <div class="form-group">
