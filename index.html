@@ -216,10 +216,14 @@
     font-size: 0.75rem; color: var(--text-secondary);
     text-align: center; margin-top: 1.5rem; line-height: 1.6;
   }
-  .fine-print {
-    font-size: 0.72rem; color: var(--text-secondary);
-    text-align: center; margin-top: 1.5rem; line-height: 1.6;
-    max-width: 600px; margin-left: auto; margin-right: auto;
+  .pricing-notes {
+    max-width: 600px; margin: 2rem auto 0; text-align: center; line-height: 1.7;
+  }
+  .pricing-notes p {
+    font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 0.8rem;
+  }
+  .pricing-notes .revision-note {
+    font-size: 0.72rem; color: #999; margin-top: 0.5rem;
   }
   .booking-section h2 {
     font-size: 1.8rem; font-weight: 700; letter-spacing: -0.03em;
@@ -360,7 +364,7 @@
         <li>2 revision rounds</li>
         <li>Graded files + LUTs</li>
       </ul>
-      <a href="https://buy.stripe.com/4gM14mdQ6gt6e9gf5g8N200" class="card-btn" target="_blank">Pay & Start</a>
+      <a href="https://buy.stripe.com/4gM14mdQ6gt6e9gf5g8N200" class="card-btn" target="_blank">Book Now</a>
     </div>
     <div class="service-card featured">
       <div class="badge">Most Popular</div>
@@ -372,7 +376,7 @@
         <li>Unlimited revisions*</li>
         <li>Graded files + LUTs</li>
       </ul>
-      <a href="https://buy.stripe.com/00w7sKfYegt62qy9KW8N201" class="card-btn" target="_blank">Pay & Start</a>
+      <a href="https://buy.stripe.com/00w7sKfYegt62qy9KW8N201" class="card-btn" target="_blank">Book Now</a>
     </div>
     <div class="service-card">
       <div class="tier">Large</div>
@@ -386,7 +390,10 @@
       <a href="#book" class="card-btn">Get a Quote</a>
     </div>
   </div>
-  <p class="fine-print">*Unlimited revisions valid for 60 days from project start. All projects delivered via Dropbox. Best results from log or flat footage — but I work with whatever you've got.</p>
+  <div class="pricing-notes">
+    <p>All projects delivered via Dropbox. I grade footage from any source — ARRI, RED, Sony, Blackmagic, Canon, iPhone, GoPro — in log, ProRes, RAW, or whatever you've got.</p>
+    <p class="revision-note">*Unlimited revisions valid for 60 days from project start.</p>
+  </div>
 </section>
 
 <div class="divider"></div>
