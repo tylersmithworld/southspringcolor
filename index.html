@@ -281,10 +281,10 @@
          data-ungraded-path="AD Seq no color/loop"
          data-start="100" data-end="142" data-ext=".jpg">
       <!-- Base graded image -->
-      <img class="base-img frame-seq active" src="AD seq color/loop100.jpg" alt="Graded">
+      <img class="base-img frame-seq active" src="AD%20seq%20color/loop100.jpg" alt="Graded">
       <!-- Before (ungraded) wrap -->
       <div class="before-wrap">
-        <img class="frame-seq active" src="AD Seq no color/loop100.jpg" alt="Ungraded">
+        <img class="frame-seq active" src="AD%20Seq%20no%20color/loop100.jpg" alt="Ungraded">
       </div>
       <div class="handle"><span class="arrows">◂ ▸</span></div>
       <span class="label label-after">Graded</span>
@@ -303,9 +303,9 @@
        data-graded-path="brax seq colored/Multicam"
        data-ungraded-path="brax seq no color/Multicam"
        data-start="101" data-end="111" data-ext=".jpg">
-    <img class="base-img frame-seq active" src="brax seq colored/Multicam101.jpg" alt="Graded">
+    <img class="base-img frame-seq active" src="brax%20seq%20colored/Multicam101.jpg" alt="Graded">
     <div class="before-wrap">
-      <img class="frame-seq active" src="brax seq no color/Multicam101.jpg" alt="Ungraded">
+      <img class="frame-seq active" src="brax%20seq%20no%20color/Multicam101.jpg" alt="Ungraded">
     </div>
     <div class="handle"><span class="arrows">◂ ▸</span></div>
     <span class="label label-after">Graded</span>
@@ -318,9 +318,9 @@
   <div class="vert-grid">
 
     <div class="ba-slider" data-mode="static" style="border-radius:10px;">
-      <img class="base-img" src="lunar color lumix.jpg" alt="Graded">
+      <img class="base-img" src="lunar%20color%20lumix.jpg" alt="Graded">
       <div class="before-wrap">
-        <img src="lunar no color lumix.jpg" alt="Ungraded">
+        <img src="lunar%20no%20color%20lumix.jpg" alt="Ungraded">
       </div>
       <div class="handle"><span class="arrows">◂ ▸</span></div>
       <span class="label label-after">Graded</span>
@@ -474,6 +474,8 @@
 
 <script>
 // ─── PRELOAD ALL SEQUENCE FRAMES ───
+const _preloadCache = []; // keep references so GC doesn't dump them
+
 document.querySelectorAll('.ba-slider[data-mode="sequence"]').forEach(slider => {
   const gradedPath = slider.dataset.gradedPath;
   const ungradedPath = slider.dataset.ungradedPath;
@@ -482,23 +484,32 @@ document.querySelectorAll('.ba-slider[data-mode="sequence"]').forEach(slider => 
   const ext = slider.dataset.ext;
   const totalFrames = end - start + 1;
 
-  // Build frame arrays
+  // Build frame arrays (URL-encode spaces for web delivery)
   const gradedFrames = [];
   const ungradedFrames = [];
   for (let i = start; i <= end; i++) {
-    gradedFrames.push(gradedPath + i + ext);
-    ungradedFrames.push(ungradedPath + i + ext);
+    gradedFrames.push(encodeURI(gradedPath + i + ext));
+    ungradedFrames.push(encodeURI(ungradedPath + i + ext));
   }
 
-  // Preload all frames
-  gradedFrames.forEach(src => { const img = new Image(); img.src = src; });
-  ungradedFrames.forEach(src => { const img = new Image(); img.src = src; });
+  // Preload all frames and KEEP references in memory
+  gradedFrames.forEach(src => { const img = new Image(); img.src = src; _preloadCache.push(img); });
+  ungradedFrames.forEach(src => { const img = new Image(); img.src = src; _preloadCache.push(img); });
 
   // Store on element
   slider._gradedFrames = gradedFrames;
   slider._ungradedFrames = ungradedFrames;
   slider._totalFrames = totalFrames;
   slider._currentFrame = 0;
+  slider._ready = false;
+
+  // Mark ready only after ALL frames are loaded
+  let loaded = 0;
+  const total = gradedFrames.length + ungradedFrames.length;
+  _preloadCache.slice(-total).forEach(img => {
+    if (img.complete) { loaded++; if (loaded >= total) slider._ready = true; }
+    else img.addEventListener('load', () => { loaded++; if (loaded >= total) slider._ready = true; });
+  });
 });
 
 // ─── UNIFIED SLIDER LOGIC ───
@@ -528,16 +539,18 @@ document.querySelectorAll('.ba-slider').forEach(slider => {
     if (labelAfter) labelAfter.style.opacity = pct < 0.08 ? 0 : 1;
     if (labelBefore) labelBefore.style.opacity = pct > 0.92 ? 0 : 1;
 
-    // Frame advance for sequence sliders
-    if (isSequence && slider._totalFrames) {
+    // Frame advance for sequence sliders (only if preloaded)
+    if (isSequence && slider._totalFrames && slider._ready) {
       const frameIdx = Math.min(
         Math.floor(pct * slider._totalFrames),
         slider._totalFrames - 1
       );
       if (frameIdx !== slider._currentFrame) {
         slider._currentFrame = frameIdx;
-        baseImg.src = slider._gradedFrames[frameIdx];
-        beforeImg.src = slider._ungradedFrames[frameIdx];
+        requestAnimationFrame(() => {
+          baseImg.src = slider._gradedFrames[frameIdx];
+          beforeImg.src = slider._ungradedFrames[frameIdx];
+        });
       }
     }
   }
