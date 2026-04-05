@@ -87,7 +87,7 @@
   .ba-slider {
     position: relative; width: 100%; overflow: hidden;
     cursor: col-resize; user-select: none; -webkit-user-select: none;
-    touch-action: none;
+    touch-action: pan-y pinch-zoom;
   }
   .ba-slider img.base-img {
     display: block; width: 100%; height: auto;
@@ -578,13 +578,31 @@ document.querySelectorAll('.ba-slider').forEach(slider => {
     }
   }
 
+  let startX = 0, startY = 0, directionLocked = false;
+
   slider.addEventListener('pointerdown', e => {
     active = true;
+    directionLocked = false;
+    startX = e.clientX;
+    startY = e.clientY;
     slider.setPointerCapture(e.pointerId);
-    setPosition(e.clientX);
   });
   slider.addEventListener('pointermove', e => {
-    if (active) setPosition(e.clientX);
+    if (!active) return;
+    if (!directionLocked) {
+      const dx = Math.abs(e.clientX - startX);
+      const dy = Math.abs(e.clientY - startY);
+      if (dx + dy < 6) return;           // wait for clear intent
+      if (dy > dx) {                      // vertical swipe → scroll
+        active = false;
+        slider.releasePointerCapture(e.pointerId);
+        return;
+      }
+      directionLocked = true;             // horizontal → slider owns it
+      setPosition(e.clientX);
+    } else {
+      setPosition(e.clientX);
+    }
   });
   slider.addEventListener('pointerup', () => active = false);
   slider.addEventListener('pointercancel', () => active = false);
