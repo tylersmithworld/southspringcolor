@@ -3,31 +3,23 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Smith — Colorist</title>
+<title>South Spring Color — Professional Color Grading</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
   :root {
     --bg: #fafafa;
-    --text: #1a1a1a;
+    --surface: #fff;
+    --surface-2: #f5f5f5;
+    --text: #111;
     --text-secondary: #666;
-    --text-tertiary: #999;
     --accent: #111;
-    --accent-hover: #333;
     --border: #e0e0e0;
-    --border-light: #f0f0f0;
-    --card-bg: #fff;
-    --highlight: #f7f7f7;
-    --green: #1a7a3a;
-    --green-bg: #e8f5e9;
-    --blue: #1a5a9a;
-    --blue-bg: #e3f2fd;
-    --amber: #8a6d00;
-    --amber-bg: #fff8e1;
-    --max-width: 1120px;
-    --radius: 12px;
+    --max-width: 1080px;
   }
+
+  html { scroll-behavior: smooth; }
 
   body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -37,743 +29,544 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  /* === NAV === */
+  /* ─── NAV ─── */
   nav {
-    position: sticky; top: 0; z-index: 100;
-    background: rgba(250,250,250,0.92);
-    backdrop-filter: blur(12px);
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(250,250,250,0.9);
+    backdrop-filter: blur(16px);
     border-bottom: 1px solid var(--border);
   }
   nav .inner {
-    max-width: var(--max-width); margin: 0 auto; padding: 0 2rem;
-    height: 64px; display: flex; align-items: center; justify-content: space-between;
+    max-width: var(--max-width);
+    margin: 0 auto; padding: 0 2rem;
+    height: 56px; display: flex; align-items: center; justify-content: space-between;
   }
-  nav .logo { font-weight: 600; font-size: 1.1rem; letter-spacing: -0.02em; }
-  nav ul { list-style: none; display: flex; gap: 1.75rem; }
-  nav a {
-    text-decoration: none; color: var(--text-secondary);
-    font-size: 0.85rem; font-weight: 400; transition: color 0.2s;
+  nav .logo { font-weight: 600; font-size: 0.95rem; letter-spacing: -0.01em; }
+  nav .nav-cta {
+    padding: 0.45rem 1.2rem; background: var(--accent); color: #fff;
+    text-decoration: none; border-radius: 6px; font-size: 0.8rem; font-weight: 500;
+    transition: opacity 0.2s;
   }
-  nav a:hover { color: var(--text); }
+  nav .nav-cta:hover { opacity: 0.8; }
 
-  /* === SECTIONS === */
-  .container { max-width: var(--max-width); margin: 0 auto; padding: 0 2rem; }
-  .section-label {
-    font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.12em;
-    color: var(--text-tertiary); font-weight: 500; margin-bottom: 1.5rem;
-    padding-top: 4rem;
+  /* ─── HERO (first widescreen slider) ─── */
+  .hero {
+    max-width: var(--max-width); margin: 0 auto;
+    padding: 80px 2rem 0;
+  }
+  .hero-slider-wrap {
+    position: relative;
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .hero-overlay {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    padding: 2.5rem 2rem;
+    background: linear-gradient(0deg, rgba(0,0,0,0.6) 0%, transparent 100%);
+    z-index: 4; pointer-events: none;
+  }
+  .hero-overlay h1 {
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 700; letter-spacing: -0.03em; line-height: 1.1;
+    color: #fff; margin-bottom: 0.3rem;
+  }
+  .hero-overlay p {
+    font-size: 1rem; color: rgba(255,255,255,0.75); font-weight: 300;
   }
 
-  /* === HERO === */
-  .hero { padding: 6rem 2rem 4rem; max-width: var(--max-width); margin: 0 auto; }
-  .hero h1 {
-    font-size: clamp(2.2rem, 5vw, 3.4rem); font-weight: 600;
-    letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 1.25rem;
+  /* ─── SECOND WIDE SLIDER ─── */
+  .wide-slider-section {
+    max-width: var(--max-width); margin: 0 auto;
+    padding: 1.5rem 2rem 0;
   }
-  .hero .sub {
-    font-size: 1.1rem; color: var(--text-secondary); max-width: 560px; line-height: 1.7;
-  }
-  .hero .credits { margin-top: 2rem; display: flex; gap: 0.75rem; flex-wrap: wrap; }
-  .tag {
-    font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em;
-    color: var(--text-secondary); border: 1px solid var(--border);
-    padding: 0.35rem 0.9rem; border-radius: 100px; white-space: nowrap;
+  .wide-slider-section .ba-slider {
+    border-radius: 14px;
   }
 
-  /* === WORK GRID === */
-  .work-grid {
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 1.25rem; padding-bottom: 2rem;
-  }
-  .work-card {
-    background: var(--card-bg); border: 1px solid var(--border);
-    border-radius: var(--radius); overflow: hidden;
-    transition: box-shadow 0.25s, transform 0.25s; cursor: pointer;
-  }
-  .work-card:hover { box-shadow: 0 8px 30px rgba(0,0,0,0.07); transform: translateY(-2px); }
-  .work-card .thumb {
-    width: 100%; aspect-ratio: 16/9; background: #d4d4d4;
-    display: flex; align-items: center; justify-content: center;
-    color: #999; font-size: 0.8rem; font-weight: 500;
-  }
-  .work-card .info { padding: 1rem 1.25rem; }
-  .work-card .info h3 { font-size: 0.95rem; font-weight: 500; margin-bottom: 0.25rem; }
-  .work-card .info .meta { font-size: 0.75rem; color: var(--text-secondary); }
-
-  /* === BEFORE/AFTER SLIDER === */
+  /* ─── BA SLIDER (shared) ─── */
   .ba-slider {
-    background: var(--card-bg); border: 1px solid var(--border);
-    border-radius: var(--radius); overflow: hidden; margin-bottom: 1.25rem;
+    position: relative; width: 100%; overflow: hidden;
+    cursor: col-resize; user-select: none; -webkit-user-select: none;
   }
-  .ba-slider .caption { padding: 0.85rem 1.25rem; font-size: 0.8rem; color: var(--text-secondary); }
-
-  .slider-wrap {
-    position: relative; width: 100%; aspect-ratio: 16/9;
-    overflow: hidden; cursor: col-resize; user-select: none;
-    -webkit-user-select: none;
+  .ba-slider img.base-img {
+    display: block; width: 100%; height: auto;
+    -webkit-user-drag: none; pointer-events: none;
   }
-  .slider-wrap .layer {
-    position: absolute; inset: 0; background: #c8c8c8;
-    display: flex; align-items: center; justify-content: center;
-    color: #888; font-size: 0.85rem; font-weight: 500;
+  .ba-slider .before-wrap {
+    position: absolute; top: 0; right: 0;
+    width: 67%; height: 100%; overflow: hidden;
   }
-  .slider-wrap .layer.before {
-    clip-path: inset(0 50% 0 0);   /* controlled by JS */
-    z-index: 2;
+  .ba-slider .before-wrap img {
+    position: absolute; top: 0; right: 0;
+    height: 100%; object-fit: cover; max-width: none;
+    -webkit-user-drag: none; pointer-events: none;
   }
-  .slider-wrap .layer.after {
-    background: #b0b0b0;
-    z-index: 1;
+  .ba-slider .handle {
+    position: absolute; top: 0; right: 67%;
+    width: 2px; height: 100%;
+    background: rgba(255,255,255,0.6);
+    transform: translateX(50%);
+    pointer-events: none; z-index: 2;
   }
-  /* Slider images — swap placeholders for real imgs */
-  .slider-wrap .layer img {
-    width: 100%; height: 100%; object-fit: cover;
-    display: block; pointer-events: none;
-  }
-
-  /* Divider line */
-  .slider-divider {
-    position: absolute; top: 0; bottom: 0; left: 50%;
-    width: 3px; background: #fff; z-index: 10;
-    transform: translateX(-50%);
-    pointer-events: none;
-    box-shadow: 0 0 6px rgba(0,0,0,0.35);
-  }
-  /* Handle circle */
-  .slider-handle {
-    position: absolute; top: 50%; left: 50%; z-index: 11;
+  .ba-slider .handle::after {
+    content: ''; position: absolute; top: 50%; left: 50%;
     transform: translate(-50%, -50%);
-    width: 40px; height: 40px; border-radius: 50%;
-    background: rgba(255,255,255,0.95);
-    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-    display: flex; align-items: center; justify-content: center;
-    pointer-events: none;
+    width: 36px; height: 36px; border-radius: 50%;
+    background: rgba(255,255,255,0.2); backdrop-filter: blur(8px);
+    border: 2px solid rgba(255,255,255,0.6);
   }
-  .slider-handle svg { width: 18px; height: 18px; fill: none; stroke: #333; stroke-width: 2.5; stroke-linecap: round; }
+  .ba-slider .handle .arrows {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%); z-index: 1;
+    font-size: 0.65rem; color: #fff; pointer-events: none;
+    letter-spacing: 0.25em;
+  }
+  .ba-slider .label {
+    position: absolute; top: 12px;
+    font-size: 0.55rem; text-transform: uppercase; letter-spacing: 0.12em;
+    color: #fff; background: rgba(0,0,0,0.45); padding: 2px 8px;
+    border-radius: 3px; z-index: 5; pointer-events: none;
+    transition: opacity 0.2s;
+  }
+  .ba-slider .label-before { right: 12px; }
+  .ba-slider .label-after { left: 12px; }
 
-  /* Labels */
-  .slider-label {
-    position: absolute; top: 12px; z-index: 5;
-    font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.1em;
-    background: rgba(0,0,0,0.55); color: #fff;
-    padding: 2px 8px; border-radius: 4px; pointer-events: none;
-  }
-  .slider-label.lbl-before { left: 12px; }
-  .slider-label.lbl-after { right: 12px; }
+  /* Hide all sequence frames except the active one */
+  .ba-slider .frame-seq { display: none; }
+  .ba-slider .frame-seq.active { display: block; }
 
-  /* === STATIC SIDE-BY-SIDES (remaining cards) === */
-  .ba-card {
-    background: var(--card-bg); border: 1px solid var(--border);
-    border-radius: var(--radius); overflow: hidden; margin-bottom: 1.25rem;
-  }
-  .ba-pair { display: grid; grid-template-columns: 1fr 1fr; }
-  .ba-pair .frame {
-    aspect-ratio: 16/9; background: #d4d4d4;
-    display: flex; align-items: center; justify-content: center;
-    color: #999; font-size: 0.8rem; position: relative;
-  }
-  .ba-pair .frame::after {
-    content: attr(data-label); position: absolute; top: 10px; left: 10px;
-    font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.1em;
-    background: rgba(0,0,0,0.55); color: #fff; padding: 2px 7px; border-radius: 4px;
-  }
-  .ba-card .caption { padding: 0.85rem 1.25rem; font-size: 0.8rem; color: var(--text-secondary); }
-
-  /* === REEL === */
-  .reel-placeholder {
-    background: var(--card-bg); border: 1px solid var(--border);
-    border-radius: var(--radius); aspect-ratio: 16/9; max-width: 720px;
-    display: flex; align-items: center; justify-content: center;
-    flex-direction: column; gap: 0.6rem; color: #999;
-  }
-  .play-icon {
-    width: 52px; height: 52px; border-radius: 50%; border: 2px solid #bbb;
-    display: flex; align-items: center; justify-content: center;
-  }
-  .play-icon::after {
-    content: ''; width: 0; height: 0;
-    border-style: solid; border-width: 9px 0 9px 16px;
-    border-color: transparent transparent transparent #bbb; margin-left: 3px;
+  /* ─── SECTION HELPERS ─── */
+  .section { max-width: var(--max-width); margin: 0 auto; padding: 0 2rem; }
+  .section-pad { padding-top: 4rem; padding-bottom: 4rem; }
+  .divider {
+    max-width: var(--max-width); margin: 0 auto; padding: 0 2rem;
+    border-top: 1px solid var(--border);
   }
 
-  /* === ABOUT === */
-  .about-grid {
-    display: grid; grid-template-columns: auto 1fr; gap: 3rem;
-    align-items: start; padding-bottom: 2rem;
+  /* ─── VERTICAL SLIDERS (side by side) ─── */
+  .vert-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;
   }
-  .headshot {
-    width: 240px; aspect-ratio: 1; background: #d4d4d4;
-    border-radius: var(--radius); display: flex; align-items: center;
-    justify-content: center; color: #999; font-size: 0.8rem;
-  }
-  .bio h2 { font-size: 1.4rem; font-weight: 600; margin-bottom: 0.75rem; letter-spacing: -0.02em; }
-  .bio p { color: var(--text-secondary); margin-bottom: 0.85rem; line-height: 1.75; font-size: 0.95rem; }
-  .tools { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-top: 1.25rem; }
-
-  /* ============================================================
-     CLIENT WORKFLOW SECTION
-     ============================================================ */
-
-  .workflow-intro {
-    font-size: 1.05rem; color: var(--text-secondary);
-    max-width: 640px; line-height: 1.75; margin-bottom: 2.5rem;
+  .vert-grid .ba-slider {
+    border-radius: 10px;
   }
 
-  /* Step cards */
-  .steps { display: flex; flex-direction: column; gap: 1.5rem; padding-bottom: 3rem; }
-  .step {
-    background: var(--card-bg); border: 1px solid var(--border);
-    border-radius: var(--radius); padding: 2rem 2.25rem; position: relative;
+  /* ─── SERVICES ─── */
+  .services-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem;
   }
-  .step-number {
-    position: absolute; top: -12px; left: 24px;
-    background: var(--accent); color: #fff; font-size: 0.7rem;
-    font-weight: 600; padding: 3px 12px; border-radius: 100px;
-    letter-spacing: 0.04em;
+  .service-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 2rem 1.5rem; text-align: center;
+    position: relative; transition: border-color 0.2s;
   }
-  .step h3 { font-size: 1.05rem; font-weight: 600; margin-bottom: 0.6rem; }
-  .step p { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.7; }
+  .service-card:hover { border-color: #bbb; }
+  .service-card.featured { border-color: var(--accent); }
+  .service-card .badge {
+    position: absolute; top: -10px; left: 50%; transform: translateX(-50%);
+    background: var(--accent); color: #fff; font-size: 0.6rem; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.1em;
+    padding: 3px 12px; border-radius: 100px;
+  }
+  .service-card .tier {
+    font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--text-secondary); margin-bottom: 0.75rem;
+  }
+  .service-card .price {
+    font-size: 2rem; font-weight: 700; letter-spacing: -0.03em;
+    margin-bottom: 0.25rem;
+  }
+  .service-card .price-note {
+    font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 1.5rem;
+  }
+  .service-card ul {
+    list-style: none; text-align: left; margin-bottom: 2rem;
+  }
+  .service-card ul li {
+    font-size: 0.8rem; color: var(--text-secondary); padding: 0.4rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .service-card ul li::before {
+    content: '✓'; margin-right: 0.6rem; color: var(--accent); font-weight: 600;
+  }
+  .service-card .card-btn {
+    display: block; width: 100%; padding: 0.7rem;
+    border: 1px solid var(--border); background: transparent;
+    color: var(--text); border-radius: 8px; font-size: 0.85rem;
+    font-weight: 500; cursor: pointer; transition: all 0.2s;
+    text-decoration: none; text-align: center; font-family: inherit;
+  }
+  .service-card .card-btn:hover { background: var(--surface-2); border-color: #bbb; }
+  .service-card.featured .card-btn {
+    background: var(--accent); color: #fff; border-color: var(--accent);
+  }
+  .service-card.featured .card-btn:hover { opacity: 0.85; }
 
-  /* Info boxes inside steps */
-  .info-box {
-    margin-top: 1.25rem; padding: 1rem 1.25rem;
-    border-radius: 8px; font-size: 0.85rem; line-height: 1.7;
+  /* ─── BOOKING FORM ─── */
+  .booking-section { max-width: 580px; margin: 0 auto; }
+  .form-group select {
+    width: 100%; padding: 0.75rem 1rem;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 8px; color: var(--text); font-family: inherit;
+    font-size: 0.9rem; transition: border-color 0.2s; outline: none;
+    cursor: pointer; appearance: none;
   }
-  .info-box.specs { background: var(--blue-bg); color: var(--blue); }
-  .info-box.note { background: var(--amber-bg); color: var(--amber); }
-  .info-box.success { background: var(--green-bg); color: var(--green); }
-  .info-box strong { font-weight: 600; }
-  .info-box ul { margin: 0.5rem 0 0 1.25rem; }
-  .info-box li { margin-bottom: 0.3rem; }
+  .form-group select:focus { border-color: #999; }
+  .delivery-note {
+    font-size: 0.75rem; color: var(--text-secondary);
+    text-align: center; margin-top: 1.5rem; line-height: 1.6;
+  }
+  .booking-section h2 {
+    font-size: 1.8rem; font-weight: 700; letter-spacing: -0.03em;
+    text-align: center; margin-bottom: 0.5rem;
+  }
+  .booking-section .booking-sub {
+    text-align: center; color: var(--text-secondary);
+    font-size: 0.9rem; margin-bottom: 2.5rem;
+  }
+  .form-group { margin-bottom: 1.25rem; }
+  .form-group label {
+    display: block; font-size: 0.75rem; font-weight: 500;
+    margin-bottom: 0.4rem; color: var(--text-secondary);
+    text-transform: uppercase; letter-spacing: 0.06em;
+  }
+  .form-group input, .form-group textarea {
+    width: 100%; padding: 0.75rem 1rem;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 8px; color: var(--text); font-family: inherit;
+    font-size: 0.9rem; transition: border-color 0.2s; outline: none;
+  }
+  .form-group input:focus, .form-group textarea:focus { border-color: #999; }
+  .form-group textarea { resize: vertical; min-height: 110px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .submit-btn {
+    display: block; width: 100%; padding: 0.9rem;
+    background: var(--accent); color: #fff; border: none; border-radius: 8px;
+    font-size: 0.95rem; font-weight: 600; cursor: pointer;
+    font-family: inherit; transition: opacity 0.2s; margin-top: 0.5rem;
+  }
+  .submit-btn:hover { opacity: 0.8; }
 
-  /* Spec table */
-  .spec-table {
-    width: 100%; margin-top: 1rem; border-collapse: collapse; font-size: 0.8rem;
-  }
-  .spec-table th {
-    text-align: left; font-weight: 600; padding: 0.6rem 1rem;
-    background: var(--highlight); border-bottom: 1px solid var(--border);
-    font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em;
-    color: var(--text-secondary);
-  }
-  .spec-table td {
-    padding: 0.6rem 1rem; border-bottom: 1px solid var(--border-light);
-    color: var(--text-secondary);
-  }
-  .spec-table code {
-    background: var(--highlight); padding: 1px 5px; border-radius: 3px;
-    font-size: 0.78rem;
-  }
-
-  /* Pricing cards */
-  .pricing-grid {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 1rem; margin-top: 1.5rem;
-  }
-  .price-card {
-    border: 1px solid var(--border); border-radius: 10px;
-    padding: 1.5rem; text-align: center; background: var(--card-bg);
-  }
-  .price-card.featured { border-color: var(--accent); }
-  .price-card h4 { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.25rem; }
-  .price-card .price {
-    font-size: 1.6rem; font-weight: 700; margin: 0.5rem 0;
-    letter-spacing: -0.02em;
-  }
-  .price-card .price span { font-size: 0.8rem; font-weight: 400; color: var(--text-secondary); }
-  .price-card .includes {
-    text-align: left; font-size: 0.8rem; color: var(--text-secondary);
-    margin-top: 0.75rem; line-height: 1.8;
-  }
-  .price-card .includes li { list-style: none; }
-  .price-card .includes li::before { content: '✓ '; color: var(--green); font-weight: 600; }
-
-  /* CTA Buttons */
-  .btn {
-    display: inline-block; padding: 0.75rem 2rem;
-    background: var(--accent); color: #fff; text-decoration: none;
-    border-radius: 8px; font-size: 0.85rem; font-weight: 500;
-    transition: background 0.2s; border: none; cursor: pointer;
-    margin-top: 1rem;
-  }
-  .btn:hover { background: var(--accent-hover); }
-  .btn-outline {
-    background: transparent; color: var(--accent);
-    border: 1px solid var(--border);
-  }
-  .btn-outline:hover { background: var(--highlight); }
-
-  /* Revision workflow */
-  .revision-flow {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem; margin-top: 1.25rem;
-  }
-  .rev-step {
-    text-align: center; padding: 1.25rem; background: var(--highlight);
-    border-radius: 8px;
-  }
-  .rev-step .num {
-    width: 28px; height: 28px; border-radius: 50%; background: var(--accent);
-    color: #fff; display: inline-flex; align-items: center; justify-content: center;
-    font-size: 0.75rem; font-weight: 600; margin-bottom: 0.5rem;
-  }
-  .rev-step h5 { font-size: 0.8rem; font-weight: 600; margin-bottom: 0.25rem; }
-  .rev-step p { font-size: 0.75rem; color: var(--text-secondary); }
-
-  /* === CONTACT === */
-  .contact-section { text-align: center; padding: 4rem 0 6rem; }
-  .contact-section h2 { font-size: 1.8rem; font-weight: 600; margin-bottom: 0.6rem; letter-spacing: -0.02em; }
-  .contact-section p { color: var(--text-secondary); margin-bottom: 1.5rem; }
-  .contact-links { display: flex; justify-content: center; gap: 2rem; margin-top: 1.5rem; }
-  .contact-links a { color: var(--text-secondary); text-decoration: none; font-size: 0.85rem; transition: color 0.2s; }
-  .contact-links a:hover { color: var(--text); }
-
-  /* === FOOTER === */
   footer {
-    border-top: 1px solid var(--border); padding: 2rem;
-    text-align: center; font-size: 0.72rem; color: var(--text-tertiary);
+    border-top: 1px solid var(--border);
+    padding: 2rem; text-align: center;
+    font-size: 0.7rem; color: var(--text-secondary);
   }
 
-  /* === RESPONSIVE === */
   @media (max-width: 768px) {
-    .about-grid { grid-template-columns: 1fr; }
-    .headshot { width: 160px; }
-    .ba-pair { grid-template-columns: 1fr; }
-    .work-grid { grid-template-columns: 1fr; }
-    nav ul { gap: 1rem; }
-    .step { padding: 1.5rem; }
-    .pricing-grid { grid-template-columns: 1fr; }
+    .hero { padding: 70px 1rem 0; }
+    .wide-slider-section { padding: 1rem 1rem 0; }
+    .hero-overlay { padding: 1.5rem 1.25rem; }
+    .vert-grid { grid-template-columns: 1fr; max-width: 400px; margin: 0 auto; }
+    .services-grid { grid-template-columns: 1fr; max-width: 380px; margin: 0 auto; }
+    .form-row { grid-template-columns: 1fr; }
   }
 </style>
 </head>
 <body>
 
-<!-- ============ NAV ============ -->
+<!-- NAV -->
 <nav>
   <div class="inner">
-    <div class="logo">Smith</div>
-    <ul>
-      <li><a href="#work">Work</a></li>
-      <li><a href="#reel">Reel</a></li>
-      <li><a href="#about">About</a></li>
-      <li><a href="#hire">Hire Me</a></li>
-      <li><a href="#contact">Contact</a></li>
-    </ul>
+    <div class="logo">South Spring Color</div>
+    <a href="#book" class="nav-cta">Book Now</a>
   </div>
 </nav>
 
-<!-- ============ HERO ============ -->
+<!-- HERO — AD desert motorcycle (frame-advance slider) -->
 <section class="hero">
-  <h1>Colorist for<br>Film & Television</h1>
-  <p class="sub">Crafting mood, tone, and visual identity through color. Currently in-house at DelPalma — available for freelance grading on select projects.</p>
-  <div class="credits">
-    <span class="tag">Grammy Awards — YouTube</span>
-    <span class="tag">Braxton Session</span>
-    <span class="tag">DelPalma</span>
-    <!-- ADD MORE CREDITS -->
+  <div class="hero-slider-wrap">
+    <div class="ba-slider" data-mode="sequence"
+         data-graded-path="AD seq color/loop"
+         data-ungraded-path="AD Seq no color/loop"
+         data-start="100" data-end="142" data-ext=".jpg">
+      <!-- Base graded image -->
+      <img class="base-img frame-seq active" src="AD seq color/loop100.jpg" alt="Graded">
+      <!-- Before (ungraded) wrap -->
+      <div class="before-wrap">
+        <img class="frame-seq active" src="AD Seq no color/loop100.jpg" alt="Ungraded">
+      </div>
+      <div class="handle"><span class="arrows">◂ ▸</span></div>
+      <span class="label label-after">Graded</span>
+      <span class="label label-before">Ungraded</span>
+    </div>
+    <div class="hero-overlay">
+      <h1>South Spring Color</h1>
+      <p>Professional Color Grading</p>
+    </div>
   </div>
 </section>
 
-<!-- ============ SELECTED WORK ============ -->
-<div class="container">
-  <div class="section-label" id="work">Selected Work</div>
-  <div class="work-grid">
-    <div class="work-card">
-      <div class="thumb">[ Braxton Session — Thumbnail ]</div>
-      <div class="info">
-        <h3>Braxton Session — Grammy Awards / YouTube</h3>
-        <div class="meta">Shot, Edited & Colored · Music · 2024</div>
+<!-- SECOND WIDE — BRAX guitar (frame-advance slider) -->
+<section class="wide-slider-section">
+  <div class="ba-slider" data-mode="sequence"
+       data-graded-path="brax seq colored/Multicam"
+       data-ungraded-path="brax seq no color/Multicam"
+       data-start="101" data-end="111" data-ext=".jpg">
+    <img class="base-img frame-seq active" src="brax seq colored/Multicam101.jpg" alt="Graded">
+    <div class="before-wrap">
+      <img class="frame-seq active" src="brax seq no color/Multicam101.jpg" alt="Ungraded">
+    </div>
+    <div class="handle"><span class="arrows">◂ ▸</span></div>
+    <span class="label label-after">Graded</span>
+    <span class="label label-before">Ungraded</span>
+  </div>
+</section>
+
+<!-- VERTICAL SLIDERS (static, side by side) -->
+<section class="section section-pad">
+  <div class="vert-grid">
+
+    <div class="ba-slider" data-mode="static" style="border-radius:10px;">
+      <img class="base-img" src="lunar color lumix.jpg" alt="Graded">
+      <div class="before-wrap">
+        <img src="lunar no color lumix.jpg" alt="Ungraded">
       </div>
+      <div class="handle"><span class="arrows">◂ ▸</span></div>
+      <span class="label label-after">Graded</span>
+      <span class="label label-before">Ungraded</span>
     </div>
-    <div class="work-card">
-      <div class="thumb">[ Project Thumbnail ]</div>
-      <div class="info"><h3>Project Title</h3><div class="meta">Color · Category · Year</div></div>
-    </div>
-    <div class="work-card">
-      <div class="thumb">[ Project Thumbnail ]</div>
-      <div class="info"><h3>Project Title</h3><div class="meta">Color · Category · Year</div></div>
-    </div>
-    <div class="work-card">
-      <div class="thumb">[ Project Thumbnail ]</div>
-      <div class="info"><h3>Project Title</h3><div class="meta">Color · Category · Year</div></div>
-    </div>
-    <div class="work-card">
-      <div class="thumb">[ Project Thumbnail ]</div>
-      <div class="info"><h3>Project Title</h3><div class="meta">Color · Category · Year</div></div>
-    </div>
-    <div class="work-card">
-      <div class="thumb">[ Project Thumbnail ]</div>
-      <div class="info"><h3>Project Title</h3><div class="meta">Color · Category · Year</div></div>
-    </div>
-  </div>
 
-  <!-- GRADE BREAKDOWNS -->
-  <div class="section-label">Grade Breakdowns</div>
-
-  <!-- FEATURED: Before/After Slider -->
-  <div class="ba-slider">
-    <div class="slider-wrap" id="slider1">
-      <!-- AFTER layer sits behind -->
-      <div class="layer after">
-        <!-- Replace this placeholder div with: <img src="after.jpg" alt="Graded"> -->
-        <span>[ Final Grade ]</span>
+    <div class="ba-slider" data-mode="static" style="border-radius:10px;">
+      <img class="base-img" src="IMG_8167.00_00_04_07.Still001.jpg" alt="Graded">
+      <div class="before-wrap">
+        <img src="IMG_8167.00_00_04_07.Still002.jpg" alt="Ungraded">
       </div>
-      <!-- BEFORE layer clips over the top -->
-      <div class="layer before">
-        <!-- Replace this placeholder div with: <img src="before.jpg" alt="Raw"> -->
-        <span>[ Raw / Log Footage ]</span>
-      </div>
-      <span class="slider-label lbl-before">Before</span>
-      <span class="slider-label lbl-after">After</span>
-      <div class="slider-divider"></div>
-      <div class="slider-handle">
-        <svg viewBox="0 0 24 24"><polyline points="8,4 3,12 8,20"/><polyline points="16,4 21,12 16,20"/></svg>
-      </div>
+      <div class="handle"><span class="arrows">◂ ▸</span></div>
+      <span class="label label-after">Graded</span>
+      <span class="label label-before">Ungraded</span>
     </div>
-    <div class="caption">Braxton Session — Warm mid-tones with lifted shadows for an intimate, analog feel. Drag to compare.</div>
-  </div>
 
-  <!-- Additional side-by-sides -->
-  <div class="ba-card">
-    <div class="ba-pair">
-      <div class="frame" data-label="Before">[ Raw / Log ]</div>
-      <div class="frame" data-label="After">[ Final grade ]</div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SERVICES -->
+<section class="section section-pad" id="services">
+  <div class="section-label" style="margin-bottom:1.5rem;">Services & Pricing</div>
+  <div class="services-grid">
+    <div class="service-card">
+      <div class="tier">Small</div>
+      <div class="price">$500</div>
+      <div class="price-note">1–5 files</div>
+      <ul>
+        <li>Full creative grade</li>
+        <li>2 revision rounds</li>
+        <li>LUTs + graded ProRes delivery</li>
+        <li>Dropbox delivery</li>
+      </ul>
+      <a href="https://buy.stripe.com/4gM14mdQ6gt6e9gf5g8N200" class="card-btn" target="_blank">Pay & Start</a>
     </div>
-    <div class="caption">Project Title — Grading approach description.</div>
-  </div>
-  <div class="ba-card">
-    <div class="ba-pair">
-      <div class="frame" data-label="Before">[ Raw / Log ]</div>
-      <div class="frame" data-label="After">[ Final grade ]</div>
+    <div class="service-card featured">
+      <div class="badge">Most Popular</div>
+      <div class="tier">Medium</div>
+      <div class="price">$1,200</div>
+      <div class="price-note">6–15 files</div>
+      <ul>
+        <li>Full creative grade</li>
+        <li>Look development</li>
+        <li>2 revision rounds</li>
+        <li>LUTs + graded ProRes delivery</li>
+      </ul>
+      <a href="https://buy.stripe.com/00w7sKfYegt62qy9KW8N201" class="card-btn" target="_blank">Pay & Start</a>
     </div>
-    <div class="caption">Project Title — Grading approach description.</div>
-  </div>
-
-  <!-- REEL -->
-  <div class="section-label" id="reel">Reel</div>
-  <div class="reel-placeholder" style="margin-bottom:2rem;">
-    <div class="play-icon"></div>
-    <span style="font-size:0.78rem;">Embed Vimeo reel here</span>
-  </div>
-
-  <!-- ABOUT -->
-  <div class="section-label" id="about">About</div>
-  <div class="about-grid">
-    <div class="headshot">[ Headshot ]</div>
-    <div class="bio">
-      <h2>Smith</h2>
-      <p>Colorist with a background in shooting and editing, currently in-house at DelPalma. My most notable credit is the Braxton Session for the Grammy Awards on YouTube — a project I shot, edited, and colored end to end.</p>
-      <p>I approach grading with a focus on serving the story — finding the balance between naturalism and atmosphere that supports the director's vision. Open to freelance work on narrative, documentary, music, and commercial projects.</p>
-      <div class="tools">
-        <span class="tag">Colourlab AI</span>
-        <span class="tag">DaVinci Resolve</span>
-        <span class="tag">Premiere Pro</span>
-        <span class="tag">Remote Grading</span>
-        <span class="tag">4K / 6K / 8K</span>
-        <span class="tag">HDR</span>
-      </div>
+    <div class="service-card">
+      <div class="tier">Large</div>
+      <div class="price">Custom</div>
+      <div class="price-note">15+ files</div>
+      <ul>
+        <li>Full creative grade</li>
+        <li>Look development</li>
+        <li>Unlimited revisions</li>
+        <li>All deliverables included</li>
+      </ul>
+      <a href="#book" class="card-btn">Get a Quote</a>
     </div>
   </div>
-</div>
+</section>
 
-<!-- ============================================================
-     HIRE ME — CLIENT WORKFLOW
-     ============================================================ -->
-<div class="container">
-  <div class="section-label" id="hire">Work With Me</div>
-  <p class="workflow-intro">I've designed a straightforward process to make working together easy — from first contact through final delivery. Here's how it works.</p>
+<div class="divider"></div>
 
-  <div class="steps">
-
-    <!-- STEP 1: INQUIRY -->
-    <div class="step">
-      <div class="step-number">Step 1</div>
-      <h3>Get in Touch</h3>
-      <p>Fill out the intake form below or email me directly. Tell me about your project — what it is, where it's at in post, and what you're looking for from the grade. The more context the better.</p>
-
-      <!-- INTAKE FORM — submits to Formspree -->
-      <form action="https://formspree.io/f/YOUR_FORM_ID" method="POST" style="margin-top:1.5rem; display:grid; gap:1rem; max-width:560px;">
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
-          <div>
-            <label style="font-size:0.75rem; font-weight:500; color:var(--text-secondary); display:block; margin-bottom:0.3rem;">Name</label>
-            <input type="text" name="name" required style="width:100%; padding:0.6rem 0.85rem; border:1px solid var(--border); border-radius:6px; font-size:0.85rem; font-family:inherit;">
-          </div>
-          <div>
-            <label style="font-size:0.75rem; font-weight:500; color:var(--text-secondary); display:block; margin-bottom:0.3rem;">Email</label>
-            <input type="email" name="email" required style="width:100%; padding:0.6rem 0.85rem; border:1px solid var(--border); border-radius:6px; font-size:0.85rem; font-family:inherit;">
-          </div>
+<!-- BOOKING -->
+<section class="section section-pad" id="book">
+  <div class="booking-section">
+    <h2>Project Details</h2>
+    <p class="booking-sub">Already paid? Fill this out so I know what you need.</p>
+    <form id="bookingForm" action="https://formsubmit.co/jobs@southspringcolor.com" method="POST">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Name</label>
+          <input type="text" name="name" placeholder="Your name" required>
         </div>
-        <div>
-          <label style="font-size:0.75rem; font-weight:500; color:var(--text-secondary); display:block; margin-bottom:0.3rem;">Project Type</label>
-          <select name="project_type" style="width:100%; padding:0.6rem 0.85rem; border:1px solid var(--border); border-radius:6px; font-size:0.85rem; font-family:inherit; background:#fff;">
-            <option value="">Select...</option>
-            <option>Narrative / Short Film</option>
-            <option>Feature Film</option>
-            <option>Documentary</option>
-            <option>Music Video</option>
-            <option>Commercial / Branded Content</option>
-            <option>Social / Digital Content</option>
-            <option>Other</option>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" name="email" placeholder="you@email.com" required>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>How many files?</label>
+          <select name="file_count" required>
+            <option value="" disabled selected>Select</option>
+            <option value="1-5">1–5 files ($500)</option>
+            <option value="6-15">6–15 files ($1,200)</option>
+            <option value="15+">15+ files (custom quote)</option>
           </select>
         </div>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
-          <div>
-            <label style="font-size:0.75rem; font-weight:500; color:var(--text-secondary); display:block; margin-bottom:0.3rem;">Estimated Runtime</label>
-            <input type="text" name="runtime" placeholder="e.g. 4 min, 22 min, 90 min" style="width:100%; padding:0.6rem 0.85rem; border:1px solid var(--border); border-radius:6px; font-size:0.85rem; font-family:inherit;">
-          </div>
-          <div>
-            <label style="font-size:0.75rem; font-weight:500; color:var(--text-secondary); display:block; margin-bottom:0.3rem;">Target Delivery Date</label>
-            <input type="date" name="delivery_date" style="width:100%; padding:0.6rem 0.85rem; border:1px solid var(--border); border-radius:6px; font-size:0.85rem; font-family:inherit;">
-          </div>
-        </div>
-        <div>
-          <label style="font-size:0.75rem; font-weight:500; color:var(--text-secondary); display:block; margin-bottom:0.3rem;">Tell Me About Your Project</label>
-          <textarea name="details" rows="4" placeholder="What's the vibe? Any references? Where is the project in post? What camera/codec was used?" style="width:100%; padding:0.6rem 0.85rem; border:1px solid var(--border); border-radius:6px; font-size:0.85rem; font-family:inherit; resize:vertical;"></textarea>
-        </div>
-        <div>
-          <label style="font-size:0.75rem; font-weight:500; color:var(--text-secondary); display:block; margin-bottom:0.3rem;">Link to Reference / Mood Board (optional)</label>
-          <input type="url" name="reference_link" placeholder="Google Drive, Pinterest, Vimeo link..." style="width:100%; padding:0.6rem 0.85rem; border:1px solid var(--border); border-radius:6px; font-size:0.85rem; font-family:inherit;">
-        </div>
-        <button type="submit" class="btn" style="justify-self:start;">Send Inquiry</button>
-      </form>
-    </div>
-
-    <!-- STEP 2: QUOTE & BOOKING -->
-    <div class="step">
-      <div class="step-number">Step 2</div>
-      <h3>Quote & Booking</h3>
-      <p>I'll review your project details and get back to you within 24–48 hours with a quote and timeline. Once we agree on scope, I'll send a Square invoice for the deposit to lock in your dates.</p>
-
-      <div class="pricing-grid">
-        <div class="price-card">
-          <h4>Basic Correction</h4>
-          <div class="price">$XX <span>/ min</span></div>
-          <ul class="includes">
-            <li>Exposure & white balance</li>
-            <li>Shot matching</li>
-            <li>Skin tone correction</li>
-            <li>1 round of revisions</li>
-          </ul>
-        </div>
-        <div class="price-card featured">
-          <h4>Full Creative Grade</h4>
-          <div class="price">$XX <span>/ min</span></div>
-          <ul class="includes">
-            <li>Everything in Basic</li>
-            <li>Look development</li>
-            <li>Scene-by-scene grading</li>
-            <li>2 rounds of revisions</li>
-          </ul>
-        </div>
-        <div class="price-card">
-          <h4>Premium Package</h4>
-          <div class="price">$XX <span>/ min</span></div>
-          <ul class="includes">
-            <li>Everything in Full Grade</li>
-            <li>Live remote session</li>
-            <li>Unlimited revisions</li>
-            <li>Multiple delivery formats</li>
-          </ul>
+        <div class="form-group">
+          <label>Camera / Format</label>
+          <select name="camera">
+            <option value="" disabled selected>What was it shot on?</option>
+            <option value="arri">ARRI (LogC / ARRIRAW)</option>
+            <option value="red">RED (REDcode RAW)</option>
+            <option value="sony">Sony (S-Log3)</option>
+            <option value="blackmagic">Blackmagic (BRAW)</option>
+            <option value="panasonic">Panasonic (V-Log)</option>
+            <option value="canon">Canon (C-Log)</option>
+            <option value="iphone">iPhone / mobile</option>
+            <option value="gopro">GoPro</option>
+            <option value="other">Other / not sure</option>
+          </select>
         </div>
       </div>
 
-      <div class="info-box note" style="margin-top:1.5rem;">
-        <strong>Payment:</strong> 50% deposit to book, 50% on final delivery. Payment via Square — I'll send you a secure invoice link. Project rates available for features and longer-form work.
+      <div class="form-group">
+        <label>Desired Look</label>
+        <textarea name="look" placeholder="Describe the vibe — warm, cold, filmic, natural, stylized? Reference any films, shows, or music videos you want it to feel like."></textarea>
       </div>
 
-      <!-- CALENDAR BOOKING -->
-      <div style="margin-top:1.5rem;">
-        <p style="font-size:0.9rem; color:var(--text-secondary); margin-bottom:0.75rem;">Book an intro call to discuss your project:</p>
-        <a href="https://cal.com/YOUR_USERNAME" target="_blank" class="btn btn-outline" style="margin-top:0;">
-          Schedule a Call →
-        </a>
-        <!--
-          TO SET UP: Create a free Cal.com account, then replace YOUR_USERNAME above.
-          You can also embed the calendar directly:
-          <iframe src="https://cal.com/YOUR_USERNAME/intro?embed=true" style="width:100%;height:500px;border:none;margin-top:1rem;"></iframe>
-        -->
-      </div>
-    </div>
-
-    <!-- STEP 3: FOOTAGE DELIVERY -->
-    <div class="step">
-      <div class="step-number">Step 3</div>
-      <h3>Send Me Your Footage</h3>
-      <p>Once we're locked in, you'll send me your footage along with your edit timeline. Here's exactly what I need and how to send it.</p>
-
-      <div class="info-box specs">
-        <strong>What to send me:</strong>
-        <ul>
-          <li>Your locked edit timeline (XML, AAF, or DaVinci Resolve project)</li>
-          <li>All original camera files used in the edit (not transcodes)</li>
-          <li>Any LUTs you've been monitoring with</li>
-          <li>Reference images or stills for the look you're going for</li>
-        </ul>
+      <div class="form-group">
+        <label>Reference Images (optional)</label>
+        <input type="text" name="references" placeholder="Paste a link to stills, a mood board, or a Google Drive folder">
       </div>
 
-      <table class="spec-table" style="margin-top:1.5rem;">
-        <thead>
-          <tr><th>Specification</th><th>Preferred</th><th>Also Accepted</th></tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><strong>Codec</strong></td>
-            <td>Camera original (RAW, BRAW, ProRes, ARRIRAW)</td>
-            <td><code>ProRes 4444</code>, <code>DNxHR 444</code></td>
-          </tr>
-          <tr>
-            <td><strong>Format</strong></td>
-            <td>Original camera files</td>
-            <td><code>.mov</code> (ProRes), <code>.mxf</code> (MXF OP1a)</td>
-          </tr>
-          <tr>
-            <td><strong>Resolution</strong></td>
-            <td>Native camera resolution</td>
-            <td>Minimum 1080p, 4K+ preferred</td>
-          </tr>
-          <tr>
-            <td><strong>Color Space</strong></td>
-            <td>Log / RAW (camera native)</td>
-            <td>Rec.709 if no log available</td>
-          </tr>
-          <tr>
-            <td><strong>Timeline</strong></td>
-            <td>XML from Premiere / FCPX</td>
-            <td>AAF from Avid, DaVinci project file</td>
-          </tr>
-        </tbody>
-      </table>
-
-      <div class="info-box note" style="margin-top:1.5rem;">
-        <strong>How to send files:</strong> Use any of these — I'll provide a folder link once we're booked.
-        <ul>
-          <li><strong>Google Drive / Dropbox</strong> — Share a folder with me (free, works for most projects)</li>
-          <li><strong>WeTransfer Pro</strong> — Good for one-off deliveries up to 200GB</li>
-          <li><strong>MASV</strong> — Best for very large files, fast global transfers</li>
-          <li><strong>Physical drive</strong> — Ship a drive for feature-length projects (I'll return it)</li>
-        </ul>
+      <div class="form-group">
+        <label>Delivery Format</label>
+        <select name="delivery">
+          <option value="prores" selected>ProRes 422 HQ (standard)</option>
+          <option value="h264">H.264 (web / social)</option>
+          <option value="dnxhr">DNxHR (Avid)</option>
+          <option value="dpx">DPX sequence</option>
+          <option value="other">Other (specify in notes)</option>
+        </select>
       </div>
 
-      <div class="info-box note" style="margin-top:0.75rem;">
-        <strong>Please don't send:</strong>
-        <ul>
-          <li>H.264 / H.265 compressed exports (quality loss, banding in grades)</li>
-          <li>Screen recordings or social media downloads</li>
-          <li>Footage with a baked-in LUT (send the raw + LUT separately)</li>
-        </ul>
-      </div>
-    </div>
-
-    <!-- STEP 4: GRADING -->
-    <div class="step">
-      <div class="step-number">Step 4</div>
-      <h3>The Grade</h3>
-      <p>I'll grade your project and send you a review link with the initial pass. You'll be able to leave timecoded notes directly on the video for any adjustments.</p>
-
-      <div class="revision-flow">
-        <div class="rev-step">
-          <div class="num">1</div>
-          <h5>First Pass</h5>
-          <p>Full grade based on your references and our discussion</p>
-        </div>
-        <div class="rev-step">
-          <div class="num">2</div>
-          <h5>Your Review</h5>
-          <p>Watch the graded cut and leave timecoded notes</p>
-        </div>
-        <div class="rev-step">
-          <div class="num">3</div>
-          <h5>Revisions</h5>
-          <p>I address your notes and send an updated review link</p>
-        </div>
-        <div class="rev-step">
-          <div class="num">4</div>
-          <h5>Final Delivery</h5>
-          <p>Approved grade rendered in your delivery specs</p>
-        </div>
+      <div class="form-group">
+        <label>Anything else?</label>
+        <textarea name="notes" placeholder="Timeline, special requirements, anything I should know…" style="min-height:70px;"></textarea>
       </div>
 
-      <div class="info-box specs" style="margin-top:1.5rem;">
-        <strong>How to give feedback:</strong>
-        <ul>
-          <li>I'll send you a <strong>Frame.io</strong> or <strong>Vimeo Review</strong> link — leave comments with timecodes directly on the video</li>
-          <li>Be as specific as possible: "0:42 — skin tones feel too warm" is much more useful than "make it cooler"</li>
-          <li>Group all your notes into one round rather than sending them piecemeal</li>
-        </ul>
-      </div>
+      <button type="submit" class="submit-btn">Submit</button>
 
-      <div class="info-box note">
-        <strong>Revision policy:</strong> Your package includes a set number of revision rounds. Each round = one consolidated set of notes from you, addressed in full. Additional rounds beyond your package are billed at $XX/round.
-      </div>
-    </div>
-
-    <!-- STEP 5: DELIVERY -->
-    <div class="step">
-      <div class="step-number">Step 5</div>
-      <h3>Final Delivery</h3>
-      <p>Once you approve the grade, I'll render and deliver your final files in whatever specs you need.</p>
-
-      <div class="info-box success">
-        <strong>Standard delivery formats:</strong>
-        <ul>
-          <li><strong>Broadcast / Festival:</strong> ProRes 422 HQ or DNxHR HQ in native resolution</li>
-          <li><strong>Web / Streaming:</strong> H.264 or H.265, high bitrate</li>
-          <li><strong>Social:</strong> Platform-optimized exports (16:9, 9:16, 1:1)</li>
-          <li><strong>DCP:</strong> Available on request for theatrical delivery</li>
-        </ul>
-      </div>
-
-      <p style="font-size:0.9rem; color:var(--text-secondary); margin-top:1rem;">
-        Final balance is due on delivery. I'll send the remaining Square invoice along with your download link. Files delivered via Google Drive or Dropbox — same folder we've been using.
+      <p class="delivery-note">
+        All projects delivered via Dropbox with graded files + LUTs.<br>
+        Best results from log/flat footage — but I work with whatever you've got.
       </p>
-    </div>
+    </form>
+  </div>
+</section>
 
-  </div><!-- /steps -->
-</div>
-
-<!-- ============ CONTACT ============ -->
-<div class="container">
-  <section class="contact-section" id="contact">
-    <h2>Let's work together</h2>
-    <p>Available for freelance color grading — remote or on-site.</p>
-    <a href="mailto:tsmith945@gmail.com" class="btn">Get in Touch</a>
-    <div class="contact-links">
-      <a href="#">Vimeo</a>
-      <a href="#">Instagram</a>
-      <a href="#">IMDb</a>
-      <a href="#">LinkedIn</a>
-    </div>
-  </section>
-</div>
-
-<footer>&copy; 2026 Smith. All rights reserved.</footer>
+<footer>
+  &copy; 2026 South Spring Color. All rights reserved.
+</footer>
 
 <script>
-// Before/After Slider
-document.querySelectorAll('.slider-wrap').forEach(slider => {
-  const before = slider.querySelector('.before');
-  const divider = slider.querySelector('.slider-divider');
-  const handle = slider.querySelector('.slider-handle');
+// ─── PRELOAD ALL SEQUENCE FRAMES ───
+document.querySelectorAll('.ba-slider[data-mode="sequence"]').forEach(slider => {
+  const gradedPath = slider.dataset.gradedPath;
+  const ungradedPath = slider.dataset.ungradedPath;
+  const start = parseInt(slider.dataset.start);
+  const end = parseInt(slider.dataset.end);
+  const ext = slider.dataset.ext;
+  const totalFrames = end - start + 1;
+
+  // Build frame arrays
+  const gradedFrames = [];
+  const ungradedFrames = [];
+  for (let i = start; i <= end; i++) {
+    gradedFrames.push(gradedPath + i + ext);
+    ungradedFrames.push(ungradedPath + i + ext);
+  }
+
+  // Preload all frames
+  gradedFrames.forEach(src => { const img = new Image(); img.src = src; });
+  ungradedFrames.forEach(src => { const img = new Image(); img.src = src; });
+
+  // Store on element
+  slider._gradedFrames = gradedFrames;
+  slider._ungradedFrames = ungradedFrames;
+  slider._totalFrames = totalFrames;
+  slider._currentFrame = 0;
+});
+
+// ─── UNIFIED SLIDER LOGIC ───
+document.querySelectorAll('.ba-slider').forEach(slider => {
+  const beforeWrap = slider.querySelector('.before-wrap');
+  const handle = slider.querySelector('.handle');
+  const beforeImg = beforeWrap.querySelector('img');
+  const baseImg = slider.querySelector(':scope > img.base-img');
+  const labelAfter = slider.querySelector('.label-after');
+  const labelBefore = slider.querySelector('.label-before');
+  const isSequence = slider.dataset.mode === 'sequence';
   let active = false;
 
   function setPosition(x) {
     const rect = slider.getBoundingClientRect();
-    let pct = ((x - rect.left) / rect.width) * 100;
-    pct = Math.max(2, Math.min(98, pct));
-    before.style.clipPath = `inset(0 ${100 - pct}% 0 0)`;
-    divider.style.left = pct + '%';
-    handle.style.left = pct + '%';
+    let pct = (x - rect.left) / rect.width;
+    pct = Math.max(0, Math.min(1, pct));
+
+    // Position the split
+    const rightPct = 1 - pct;
+    beforeWrap.style.width = rightPct * 100 + '%';
+    handle.style.right = rightPct * 100 + '%';
+    handle.style.left = 'auto';
+    beforeImg.style.width = rect.width + 'px';
+
+    // Fade labels at edges
+    if (labelAfter) labelAfter.style.opacity = pct < 0.08 ? 0 : 1;
+    if (labelBefore) labelBefore.style.opacity = pct > 0.92 ? 0 : 1;
+
+    // Frame advance for sequence sliders
+    if (isSequence && slider._totalFrames) {
+      const frameIdx = Math.min(
+        Math.floor(pct * slider._totalFrames),
+        slider._totalFrames - 1
+      );
+      if (frameIdx !== slider._currentFrame) {
+        slider._currentFrame = frameIdx;
+        baseImg.src = slider._gradedFrames[frameIdx];
+        beforeImg.src = slider._ungradedFrames[frameIdx];
+      }
+    }
   }
 
-  // Mouse
-  slider.addEventListener('mousedown', e => { active = true; setPosition(e.clientX); });
-  window.addEventListener('mousemove', e => { if (active) { e.preventDefault(); setPosition(e.clientX); } });
-  window.addEventListener('mouseup', () => { active = false; });
+  slider.addEventListener('pointerdown', e => {
+    active = true;
+    slider.setPointerCapture(e.pointerId);
+    setPosition(e.clientX);
+  });
+  slider.addEventListener('pointermove', e => {
+    if (active) setPosition(e.clientX);
+  });
+  slider.addEventListener('pointerup', () => active = false);
+  slider.addEventListener('pointercancel', () => active = false);
 
-  // Touch
-  slider.addEventListener('touchstart', e => { active = true; setPosition(e.touches[0].clientX); }, { passive: true });
-  window.addEventListener('touchmove', e => { if (active) setPosition(e.touches[0].clientX); }, { passive: true });
-  window.addEventListener('touchend', () => { active = false; });
+  // Init sizing + set initial frame for sequences
+  function initSize() {
+    beforeImg.style.width = slider.offsetWidth + 'px';
+    // Set initial frame to ~33% for sequence sliders
+    if (isSequence && slider._totalFrames) {
+      const initFrame = Math.floor(0.33 * slider._totalFrames);
+      slider._currentFrame = initFrame;
+      baseImg.src = slider._gradedFrames[initFrame];
+      beforeImg.src = slider._ungradedFrames[initFrame];
+    }
+  }
+  if (baseImg.complete) initSize();
+  else baseImg.addEventListener('load', initSize);
+  window.addEventListener('resize', initSize);
 });
 </script>
 
