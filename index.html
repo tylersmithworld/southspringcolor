@@ -282,11 +282,35 @@
     font-size: 0.7rem; color: var(--text-secondary);
   }
 
+  /* ─── MOBILE WRAPPER for reordering ─── */
+  .slider-sections { display: contents; }
+
   @media (max-width: 768px) {
     .hero { padding: 70px 1rem 0; }
-    .wide-slider-section { padding: 1rem 1rem 0; }
+    .wide-slider-section { padding: 0.5rem 1rem 0; }
     .hero-overlay { padding: 1.5rem 1.25rem; }
-    .vert-grid { grid-template-columns: 1fr; max-width: 400px; margin: 0 auto; }
+    .section-pad { padding-top: 2rem; padding-bottom: 2rem; }
+
+    /* Reorder: mobile tagline, verticals first, then wide sliders */
+    .slider-sections {
+      display: flex; flex-direction: column;
+    }
+    .mobile-tagline {
+      order: 1; display: block !important;
+      text-align: center; padding: 70px 1rem 0.5rem;
+    }
+    .mobile-tagline h1 {
+      font-size: 1.8rem; font-weight: 700; letter-spacing: -0.03em; line-height: 1.1;
+    }
+    .mobile-tagline p {
+      font-size: 0.9rem; color: var(--text-secondary); margin-top: 0.3rem;
+    }
+    .slider-sections .vert-section { order: 2; padding-top: 0.5rem; }
+    .slider-sections .hero { order: 3; padding-top: 0.5rem; }
+    .slider-sections .wide-slider-section { order: 4; }
+    .hero-overlay { display: none; }
+
+    .vert-grid { grid-template-columns: 1fr; max-width: 400px; margin: 0 auto; gap: 0.75rem; }
     .services-grid { grid-template-columns: 1fr; max-width: 380px; margin: 0 auto; }
     .steps-row { flex-direction: column; gap: 1rem; align-items: flex-start; padding: 0 1rem; }
     .form-row { grid-template-columns: 1fr; }
@@ -303,6 +327,41 @@
   </div>
 </nav>
 
+<!-- Mobile-only tagline (hidden on desktop) -->
+<div class="mobile-tagline" style="display:none;">
+  <h1>From flat to final.</h1>
+  <p>Professional Color Grading</p>
+</div>
+
+<div class="slider-sections">
+
+<!-- VERTICAL SLIDERS (static — car first on mobile) -->
+<section class="section vert-section" style="padding-top:1.5rem; padding-bottom:1rem;">
+  <div class="vert-grid">
+
+    <div class="ba-slider" data-mode="static" style="border-radius:10px;">
+      <img class="base-img" src="IMG_8167.00_00_04_07.Still001.jpg" alt="Graded">
+      <div class="before-wrap">
+        <img src="IMG_8167.00_00_04_07.Still002.jpg" alt="Ungraded">
+      </div>
+      <div class="handle"><span class="arrows">◂ ▸</span></div>
+      <span class="label label-after">Graded</span>
+      <span class="label label-before">Ungraded</span>
+    </div>
+
+    <div class="ba-slider" data-mode="static" style="border-radius:10px;">
+      <img class="base-img" src="lunar%20color%20lumix.jpg" alt="Graded">
+      <div class="before-wrap">
+        <img src="lunar%20no%20color%20lumix.jpg" alt="Ungraded">
+      </div>
+      <div class="handle"><span class="arrows">◂ ▸</span></div>
+      <span class="label label-after">Graded</span>
+      <span class="label label-before">Ungraded</span>
+    </div>
+
+  </div>
+</section>
+
 <!-- HERO — AD desert motorcycle (frame-advance slider) -->
 <section class="hero">
   <div class="hero-slider-wrap">
@@ -310,9 +369,7 @@
          data-graded-path="AD seq color/loop"
          data-ungraded-path="AD Seq no color/loop"
          data-frames="100,107,114,121,128,135,142" data-ext=".jpg">
-      <!-- Base graded image -->
       <img class="base-img frame-seq active" src="AD%20seq%20color/loop100.jpg" alt="Graded">
-      <!-- Before (ungraded) wrap -->
       <div class="before-wrap">
         <img class="frame-seq active" src="AD%20Seq%20no%20color/loop100.jpg" alt="Ungraded">
       </div>
@@ -343,32 +400,7 @@
   </div>
 </section>
 
-<!-- VERTICAL SLIDERS (static, side by side) -->
-<section class="section section-pad">
-  <div class="vert-grid">
-
-    <div class="ba-slider" data-mode="static" style="border-radius:10px;">
-      <img class="base-img" src="lunar%20color%20lumix.jpg" alt="Graded">
-      <div class="before-wrap">
-        <img src="lunar%20no%20color%20lumix.jpg" alt="Ungraded">
-      </div>
-      <div class="handle"><span class="arrows">◂ ▸</span></div>
-      <span class="label label-after">Graded</span>
-      <span class="label label-before">Ungraded</span>
-    </div>
-
-    <div class="ba-slider" data-mode="static" style="border-radius:10px;">
-      <img class="base-img" src="IMG_8167.00_00_04_07.Still001.jpg" alt="Graded">
-      <div class="before-wrap">
-        <img src="IMG_8167.00_00_04_07.Still002.jpg" alt="Ungraded">
-      </div>
-      <div class="handle"><span class="arrows">◂ ▸</span></div>
-      <span class="label label-after">Graded</span>
-      <span class="label label-before">Ungraded</span>
-    </div>
-
-  </div>
-</section>
+</div><!-- /slider-sections -->
 
 <div class="divider"></div>
 
