@@ -464,10 +464,15 @@ document.querySelectorAll('.ba-slider[data-mode="sequence"]').forEach(slider => 
   const beforeWrap = slider.querySelector('.before-wrap');
   const beforeImg = beforeWrap.querySelector('img');
 
-  // Create all graded frames (inserted before the base img)
+  // Reuse the original HTML images as frame 0, create the rest
   const gradedEls = frameNums.map((n, i) => {
+    if (i === 0) {
+      // Reuse the existing base image (already loaded & decoded)
+      baseImg.src = encodeURI(gradedPath + n + ext);
+      return baseImg;
+    }
     const img = document.createElement('img');
-    img.className = 'base-img frame-seq' + (i === 0 ? ' active' : '');
+    img.className = 'base-img frame-seq';
     img.src = encodeURI(gradedPath + n + ext);
     img.alt = 'Graded';
     img.draggable = false;
@@ -476,10 +481,13 @@ document.querySelectorAll('.ba-slider[data-mode="sequence"]').forEach(slider => 
     return img;
   });
 
-  // Create all ungraded frames (inserted before the original before img)
   const ungradedEls = frameNums.map((n, i) => {
+    if (i === 0) {
+      beforeImg.src = encodeURI(ungradedPath + n + ext);
+      return beforeImg;
+    }
     const img = document.createElement('img');
-    img.className = 'frame-seq' + (i === 0 ? ' active' : '');
+    img.className = 'frame-seq';
     img.src = encodeURI(ungradedPath + n + ext);
     img.alt = 'Ungraded';
     img.draggable = false;
@@ -488,21 +496,25 @@ document.querySelectorAll('.ba-slider[data-mode="sequence"]').forEach(slider => 
     return img;
   });
 
-  // Remove the original placeholder imgs
-  baseImg.remove();
-  beforeImg.remove();
-
   // Store on slider
   slider._gradedEls = gradedEls;
   slider._ungradedEls = ungradedEls;
   slider._totalFrames = frameNums.length;
   slider._currentFrame = 0;
+  slider._ready = false;
 
-  // Set initial frame to ~33%
-  const initFrame = Math.floor(0.33 * frameNums.length);
-  slider._currentFrame = initFrame;
-  gradedEls.forEach((el, i) => el.classList.toggle('active', i === initFrame));
-  ungradedEls.forEach((el, i) => el.classList.toggle('active', i === initFrame));
+  // Pre-decode all frames, then enable interaction
+  Promise.all([
+    ...gradedEls.map(img => img.decode ? img.decode().catch(() => {}) : Promise.resolve()),
+    ...ungradedEls.map(img => img.decode ? img.decode().catch(() => {}) : Promise.resolve())
+  ]).then(() => {
+    slider._ready = true;
+    // Set initial frame to ~33%
+    const initFrame = Math.floor(0.33 * frameNums.length);
+    slider._currentFrame = initFrame;
+    gradedEls.forEach((el, i) => el.classList.toggle('active', i === initFrame));
+    ungradedEls.forEach((el, i) => el.classList.toggle('active', i === initFrame));
+  });
 });
 
 // ─── UNIFIED SLIDER LOGIC ───
@@ -551,7 +563,7 @@ document.querySelectorAll('.ba-slider').forEach(slider => {
     if (labelBefore) labelBefore.style.opacity = pct > 0.92 ? 0 : 1;
 
     // Frame advance — just toggle CSS class, no src swap
-    if (isSequence && slider._totalFrames) {
+    if (isSequence && slider._totalFrames && slider._ready) {
       const frameIdx = Math.min(
         Math.floor(pct * slider._totalFrames),
         slider._totalFrames - 1
