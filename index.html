@@ -300,13 +300,9 @@
     .hero-overlay { padding: 1.5rem 1.25rem; }
     .section-pad { padding-top: 2rem; padding-bottom: 2rem; }
 
-    /* Reorder: mobile tagline, verticals first, then wide sliders */
-    .slider-sections {
-      display: flex; flex-direction: column;
-    }
     .mobile-tagline {
-      order: 1; display: block !important;
-      text-align: center; padding: 70px 1rem 0.5rem;
+      display: block !important;
+      text-align: center; padding: 70px 1rem 0.75rem;
     }
     .mobile-tagline h1 {
       font-size: 1.8rem; font-weight: 700; letter-spacing: -0.03em; line-height: 1.1;
@@ -314,12 +310,51 @@
     .mobile-tagline p {
       font-size: 0.9rem; color: var(--text-secondary); margin-top: 0.3rem;
     }
-    .slider-sections .hero { order: 2; padding-top: 0.5rem; }
-    .slider-sections .wide-slider-section { order: 3; }
-    .slider-sections .vert-section { order: 4; padding-top: 0.5rem; }
-    .hero-overlay { display: none; }
 
-    .vert-grid { grid-template-columns: 1fr; max-width: 400px; margin: 0 auto; gap: 0.75rem; }
+    /* ─── MOBILE CAROUSEL ─── */
+    .slider-sections {
+      display: flex; flex-direction: row;
+      overflow-x: auto; overflow-y: hidden;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      gap: 0; padding: 0 0 0.5rem;
+    }
+    .slider-sections::-webkit-scrollbar { display: none; }
+    .slider-sections > .hero,
+    .slider-sections > .wide-slider-section {
+      flex: 0 0 100%; scroll-snap-align: center; scroll-snap-stop: always;
+      padding: 0 1rem !important;
+    }
+    .slider-sections .vert-section { display: contents; }
+    .slider-sections .vert-grid { display: contents; }
+    .slider-sections .vert-grid > .ba-slider {
+      flex: 0 0 calc(100% - 2rem);
+      scroll-snap-align: center; scroll-snap-stop: always;
+      margin: 0 1rem; max-width: 420px;
+      align-self: center;
+    }
+    .hero-overlay { display: none; }
+    .hero-slider-wrap { margin: 0; }
+
+    /* Tap-to-toggle on mobile (drag handle hidden) */
+    .ba-slider .handle { display: none; }
+    .ba-slider { cursor: pointer; }
+    .ba-slider .before-wrap {
+      width: 0% !important;
+      transition: width 0.45s cubic-bezier(.4,0,.2,1);
+    }
+    .ba-slider.show-ungraded .before-wrap {
+      width: 100% !important;
+    }
+    .ba-slider .label {
+      transition: opacity 0.3s;
+    }
+    .ba-slider .label-after { opacity: 1; }
+    .ba-slider .label-before { opacity: 0; }
+    .ba-slider.show-ungraded .label-after { opacity: 0; }
+    .ba-slider.show-ungraded .label-before { opacity: 1; }
     .services-grid { grid-template-columns: 1fr; max-width: 380px; margin: 0 auto; }
     .steps-row { flex-direction: column; gap: 1rem; align-items: flex-start; padding: 0 1rem; }
     .form-row { grid-template-columns: 1fr; }
@@ -587,9 +622,42 @@ document.querySelectorAll('.ba-slider').forEach(slider => {
     }
   }
 
-  // Drag is initiated from the handle only. Touching the image itself scrolls
-  // the page — no competition between horizontal drag and vertical scroll.
+  const mqMobile = window.matchMedia('(max-width: 768px)');
+
+  // ── MOBILE: tap-to-toggle between graded and ungraded ──
+  // Ignore taps that are part of a horizontal carousel swipe.
+  let tapStartX = 0, tapStartY = 0, tapMoved = false;
+  slider.addEventListener('pointerdown', e => {
+    if (!mqMobile.matches) return;
+    tapStartX = e.clientX; tapStartY = e.clientY; tapMoved = false;
+  });
+  slider.addEventListener('pointermove', e => {
+    if (!mqMobile.matches) return;
+    if (Math.abs(e.clientX - tapStartX) > 8 || Math.abs(e.clientY - tapStartY) > 8) {
+      tapMoved = true;
+    }
+  });
+  slider.addEventListener('pointerup', e => {
+    if (!mqMobile.matches) return;
+    if (tapMoved) return;
+    slider.classList.toggle('show-ungraded');
+    // Pick a representative frame for sequence sliders (center of range)
+    if (isSequence && slider._totalFrames) {
+      const pct = slider.classList.contains('show-ungraded') ? 1 : 0;
+      const frameIdx = Math.min(Math.floor(pct * slider._totalFrames), slider._totalFrames - 1);
+      if (frameIdx !== slider._currentFrame) {
+        slider._gradedEls[slider._currentFrame].classList.remove('active');
+        slider._ungradedEls[slider._currentFrame].classList.remove('active');
+        slider._currentFrame = frameIdx;
+        slider._gradedEls[frameIdx].classList.add('active');
+        slider._ungradedEls[frameIdx].classList.add('active');
+      }
+    }
+  });
+
+  // ── DESKTOP: drag the handle, click image to jump ──
   handle.addEventListener('pointerdown', e => {
+    if (mqMobile.matches) return;
     active = true;
     handle.setPointerCapture(e.pointerId);
     setPosition(e.clientX);
@@ -604,8 +672,8 @@ document.querySelectorAll('.ba-slider').forEach(slider => {
     try { handle.releasePointerCapture(e.pointerId); } catch (_) {}
   });
   handle.addEventListener('pointercancel', () => { active = false; });
-  // Click anywhere on the image to jump the slider to that point (desktop + tap)
   slider.addEventListener('click', e => {
+    if (mqMobile.matches) return;
     if (e.target.closest('.handle')) return;
     setPosition(e.clientX);
   });
