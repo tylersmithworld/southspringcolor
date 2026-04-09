@@ -300,9 +300,10 @@
     .hero-overlay { padding: 1.5rem 1.25rem; }
     .section-pad { padding-top: 2rem; padding-bottom: 2rem; }
 
+    .slider-sections { display: flex; flex-direction: column; }
     .mobile-tagline {
-      display: block !important;
-      text-align: center; padding: 70px 1rem 0.75rem;
+      order: 1; display: block !important;
+      text-align: center; padding: 70px 1rem 0.5rem;
     }
     .mobile-tagline h1 {
       font-size: 1.8rem; font-weight: 700; letter-spacing: -0.03em; line-height: 1.1;
@@ -310,51 +311,10 @@
     .mobile-tagline p {
       font-size: 0.9rem; color: var(--text-secondary); margin-top: 0.3rem;
     }
-
-    /* ─── MOBILE CAROUSEL ─── */
-    .slider-sections {
-      display: flex; flex-direction: row;
-      overflow-x: auto; overflow-y: hidden;
-      scroll-snap-type: x mandatory;
-      scroll-behavior: smooth;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
-      gap: 0; padding: 0 0 0.5rem;
-    }
-    .slider-sections::-webkit-scrollbar { display: none; }
-    .slider-sections > .hero,
-    .slider-sections > .wide-slider-section {
-      flex: 0 0 100%; scroll-snap-align: center; scroll-snap-stop: always;
-      padding: 0 1rem !important;
-    }
-    .slider-sections .vert-section { display: contents; }
-    .slider-sections .vert-grid { display: contents; }
-    .slider-sections .vert-grid > .ba-slider {
-      flex: 0 0 calc(100% - 2rem);
-      scroll-snap-align: center; scroll-snap-stop: always;
-      margin: 0 1rem; max-width: 420px;
-      align-self: center;
-    }
+    .slider-sections .vert-section { order: 2; padding-top: 0.5rem; }
+    .slider-sections .wide-slider-section { order: 3; }
     .hero-overlay { display: none; }
-    .hero-slider-wrap { margin: 0; }
-
-    /* Tap-to-toggle on mobile (drag handle hidden) */
-    .ba-slider .handle { display: none; }
-    .ba-slider { cursor: pointer; }
-    .ba-slider .before-wrap {
-      width: 0% !important;
-      transition: width 0.45s cubic-bezier(.4,0,.2,1);
-    }
-    .ba-slider.show-ungraded .before-wrap {
-      width: 100% !important;
-    }
-    .ba-slider .label {
-      transition: opacity 0.3s;
-    }
-    .ba-slider .label-after { opacity: 1; }
-    .ba-slider .label-before { opacity: 0; }
-    .ba-slider.show-ungraded .label-after { opacity: 0; }
-    .ba-slider.show-ungraded .label-before { opacity: 1; }
+    .vert-grid { grid-template-columns: 1fr; max-width: 400px; margin: 0 auto; gap: 0.75rem; }
     .services-grid { grid-template-columns: 1fr; max-width: 380px; margin: 0 auto; }
     .steps-row { flex-direction: column; gap: 1rem; align-items: flex-start; padding: 0 1rem; }
     .form-row { grid-template-columns: 1fr; }
@@ -371,37 +331,30 @@
   </div>
 </nav>
 
+<div class="slider-sections">
+
 <!-- Mobile-only tagline (hidden on desktop) -->
 <div class="mobile-tagline" style="display:none;">
   <h1>From flat to final.</h1>
   <p>Professional Color Grading</p>
 </div>
 
-<div class="slider-sections">
-
-<!-- HERO — AD desert motorcycle (frame-advance slider) -->
-<section class="hero">
-  <div class="hero-slider-wrap">
-    <div class="ba-slider" data-mode="sequence"
-         data-graded-path="AD seq color/loop"
-         data-ungraded-path="AD Seq no color/loop"
-         data-frames="100,107,114,121,128,135,142" data-ext=".jpg">
-      <img class="base-img frame-seq active" src="AD%20seq%20color/loop100.jpg" alt="Graded">
+<!-- VERTICAL — lunar car (static slider) -->
+<section class="section vert-section" style="padding-top:0.75rem; padding-bottom:1rem;">
+  <div class="vert-grid">
+    <div class="ba-slider" data-mode="static" style="border-radius:10px;">
+      <img class="base-img" src="lunar%20color%20lumix.jpg" alt="Graded">
       <div class="before-wrap">
-        <img class="frame-seq active" src="AD%20Seq%20no%20color/loop100.jpg" alt="Ungraded">
+        <img src="lunar%20no%20color%20lumix.jpg" alt="Ungraded">
       </div>
       <div class="handle"><span class="arrows">◂ ▸</span></div>
       <span class="label label-after">Graded</span>
       <span class="label label-before">Ungraded</span>
     </div>
-    <div class="hero-overlay">
-      <h1>From flat to final.</h1>
-      <p>Professional Color Grading</p>
-    </div>
   </div>
 </section>
 
-<!-- SECOND WIDE — BRAX guitar (frame-advance slider) -->
+<!-- BRAX guitar wide (frame-advance slider) -->
 <section class="wide-slider-section">
   <div class="ba-slider" data-mode="sequence"
        data-graded-path="brax seq colored/Multicam"
@@ -414,33 +367,6 @@
     <div class="handle"><span class="arrows">◂ ▸</span></div>
     <span class="label label-after">Graded</span>
     <span class="label label-before">Ungraded</span>
-  </div>
-</section>
-
-<!-- VERTICAL SLIDERS (static, side by side) -->
-<section class="section vert-section" style="padding-top:0.75rem; padding-bottom:1rem;">
-  <div class="vert-grid">
-
-    <div class="ba-slider" data-mode="static" style="border-radius:10px;">
-      <img class="base-img" src="IMG_8167.00_00_04_07.Still001.jpg" alt="Graded">
-      <div class="before-wrap">
-        <img src="IMG_8167.00_00_04_07.Still002.jpg" alt="Ungraded">
-      </div>
-      <div class="handle"><span class="arrows">◂ ▸</span></div>
-      <span class="label label-after">Graded</span>
-      <span class="label label-before">Ungraded</span>
-    </div>
-
-    <div class="ba-slider" data-mode="static" style="border-radius:10px;">
-      <img class="base-img" src="lunar%20color%20lumix.jpg" alt="Graded">
-      <div class="before-wrap">
-        <img src="lunar%20no%20color%20lumix.jpg" alt="Ungraded">
-      </div>
-      <div class="handle"><span class="arrows">◂ ▸</span></div>
-      <span class="label label-after">Graded</span>
-      <span class="label label-before">Ungraded</span>
-    </div>
-
   </div>
 </section>
 
@@ -622,42 +548,9 @@ document.querySelectorAll('.ba-slider').forEach(slider => {
     }
   }
 
-  const mqMobile = window.matchMedia('(max-width: 768px)');
-
-  // ── MOBILE: tap-to-toggle between graded and ungraded ──
-  // Ignore taps that are part of a horizontal carousel swipe.
-  let tapStartX = 0, tapStartY = 0, tapMoved = false;
-  slider.addEventListener('pointerdown', e => {
-    if (!mqMobile.matches) return;
-    tapStartX = e.clientX; tapStartY = e.clientY; tapMoved = false;
-  });
-  slider.addEventListener('pointermove', e => {
-    if (!mqMobile.matches) return;
-    if (Math.abs(e.clientX - tapStartX) > 8 || Math.abs(e.clientY - tapStartY) > 8) {
-      tapMoved = true;
-    }
-  });
-  slider.addEventListener('pointerup', e => {
-    if (!mqMobile.matches) return;
-    if (tapMoved) return;
-    slider.classList.toggle('show-ungraded');
-    // Pick a representative frame for sequence sliders (center of range)
-    if (isSequence && slider._totalFrames) {
-      const pct = slider.classList.contains('show-ungraded') ? 1 : 0;
-      const frameIdx = Math.min(Math.floor(pct * slider._totalFrames), slider._totalFrames - 1);
-      if (frameIdx !== slider._currentFrame) {
-        slider._gradedEls[slider._currentFrame].classList.remove('active');
-        slider._ungradedEls[slider._currentFrame].classList.remove('active');
-        slider._currentFrame = frameIdx;
-        slider._gradedEls[frameIdx].classList.add('active');
-        slider._ungradedEls[frameIdx].classList.add('active');
-      }
-    }
-  });
-
-  // ── DESKTOP: drag the handle, click image to jump ──
+  // Drag is initiated from the handle only. Touching the image itself scrolls
+  // the page — no competition between horizontal drag and vertical scroll.
   handle.addEventListener('pointerdown', e => {
-    if (mqMobile.matches) return;
     active = true;
     handle.setPointerCapture(e.pointerId);
     setPosition(e.clientX);
@@ -672,8 +565,8 @@ document.querySelectorAll('.ba-slider').forEach(slider => {
     try { handle.releasePointerCapture(e.pointerId); } catch (_) {}
   });
   handle.addEventListener('pointercancel', () => { active = false; });
+  // Click anywhere on the image to jump the slider to that point
   slider.addEventListener('click', e => {
-    if (mqMobile.matches) return;
     if (e.target.closest('.handle')) return;
     setPosition(e.clientX);
   });
