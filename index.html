@@ -310,7 +310,7 @@
     .slider-sections .wide-slider-section { order: 4; }
     .hero-overlay { display: none; }
 
-    .vert-grid { grid-template-columns: 1fr; max-width: 400px; margin: 0 auto; gap: 0.75rem; }
+    .vert-grid { grid-template-columns: 1fr 1fr; max-width: 100%; margin: 0 auto; gap: 0.5rem; }
     .services-grid { grid-template-columns: 1fr; max-width: 380px; margin: 0 auto; }
     .steps-row { flex-direction: column; gap: 1rem; align-items: flex-start; padding: 0 1rem; }
     .form-row { grid-template-columns: 1fr; }
@@ -585,25 +585,32 @@ document.querySelectorAll('.ba-slider').forEach(slider => {
     directionLocked = false;
     startX = e.clientX;
     startY = e.clientY;
-    slider.setPointerCapture(e.pointerId);
+    // For mouse, capture immediately. For touch, wait until direction is locked
+    // horizontal so vertical scroll isn't hijacked.
+    if (e.pointerType === 'mouse') {
+      slider.setPointerCapture(e.pointerId);
+      directionLocked = true;
+      setPosition(e.clientX);
+    }
   });
   slider.addEventListener('pointermove', e => {
     if (!active) return;
     if (!directionLocked) {
       const dx = Math.abs(e.clientX - startX);
       const dy = Math.abs(e.clientY - startY);
-      if (dx + dy < 6) return;           // wait for clear intent
-      if (dy > dx) {                      // vertical swipe → scroll
+      if (dx + dy < 8) return;            // wait for clear intent
+      if (dy >= dx) {                     // vertical-ish → let page scroll
         active = false;
-        slider.releasePointerCapture(e.pointerId);
         return;
       }
       directionLocked = true;             // horizontal → slider owns it
+      try { slider.setPointerCapture(e.pointerId); } catch (_) {}
       setPosition(e.clientX);
     } else {
       setPosition(e.clientX);
+      if (e.cancelable) e.preventDefault();
     }
-  });
+  }, { passive: false });
   slider.addEventListener('pointerup', () => active = false);
   slider.addEventListener('pointercancel', () => active = false);
 
