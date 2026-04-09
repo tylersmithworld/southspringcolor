@@ -86,7 +86,7 @@
   /* ─── BA SLIDER (shared) ─── */
   .ba-slider {
     position: relative; width: 100%; overflow: hidden;
-    cursor: col-resize; user-select: none; -webkit-user-select: none;
+    user-select: none; -webkit-user-select: none;
     touch-action: pan-y pinch-zoom;
   }
   .ba-slider img.base-img {
@@ -104,17 +104,26 @@
   }
   .ba-slider .handle {
     position: absolute; top: 0; right: 67%;
+    width: 56px; height: 100%;
+    transform: translateX(50%);
+    z-index: 2; cursor: col-resize;
+    touch-action: none;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .ba-slider .handle::before {
+    content: ''; position: absolute; top: 0; left: 50%;
+    transform: translateX(-50%);
     width: 2px; height: 100%;
     background: rgba(255,255,255,0.6);
-    transform: translateX(50%);
-    pointer-events: none; z-index: 2;
+    pointer-events: none;
   }
   .ba-slider .handle::after {
     content: ''; position: absolute; top: 50%; left: 50%;
     transform: translate(-50%, -50%);
-    width: 36px; height: 36px; border-radius: 50%;
-    background: rgba(255,255,255,0.2); backdrop-filter: blur(8px);
-    border: 2px solid rgba(255,255,255,0.6);
+    width: 44px; height: 44px; border-radius: 50%;
+    background: rgba(255,255,255,0.25); backdrop-filter: blur(8px);
+    border: 2px solid rgba(255,255,255,0.75);
+    pointer-events: none;
   }
   .ba-slider .handle .arrows {
     position: absolute; top: 50%; left: 50%;
@@ -305,12 +314,12 @@
     .mobile-tagline p {
       font-size: 0.9rem; color: var(--text-secondary); margin-top: 0.3rem;
     }
-    .slider-sections .vert-section { order: 2; padding-top: 0.5rem; }
-    .slider-sections .hero { order: 3; padding-top: 0.5rem; }
-    .slider-sections .wide-slider-section { order: 4; }
+    .slider-sections .hero { order: 2; padding-top: 0.5rem; }
+    .slider-sections .wide-slider-section { order: 3; }
+    .slider-sections .vert-section { order: 4; padding-top: 0.5rem; }
     .hero-overlay { display: none; }
 
-    .vert-grid { grid-template-columns: 1fr 1fr; max-width: 100%; margin: 0 auto; gap: 0.5rem; }
+    .vert-grid { grid-template-columns: 1fr; max-width: 400px; margin: 0 auto; gap: 0.75rem; }
     .services-grid { grid-template-columns: 1fr; max-width: 380px; margin: 0 auto; }
     .steps-row { flex-direction: column; gap: 1rem; align-items: flex-start; padding: 0 1rem; }
     .form-row { grid-template-columns: 1fr; }
@@ -578,41 +587,28 @@ document.querySelectorAll('.ba-slider').forEach(slider => {
     }
   }
 
-  let startX = 0, startY = 0, directionLocked = false;
-
-  slider.addEventListener('pointerdown', e => {
+  // Drag is initiated from the handle only. Touching the image itself scrolls
+  // the page — no competition between horizontal drag and vertical scroll.
+  handle.addEventListener('pointerdown', e => {
     active = true;
-    directionLocked = false;
-    startX = e.clientX;
-    startY = e.clientY;
-    // For mouse, capture immediately. For touch, wait until direction is locked
-    // horizontal so vertical scroll isn't hijacked.
-    if (e.pointerType === 'mouse') {
-      slider.setPointerCapture(e.pointerId);
-      directionLocked = true;
-      setPosition(e.clientX);
-    }
+    handle.setPointerCapture(e.pointerId);
+    setPosition(e.clientX);
+    e.preventDefault();
   });
-  slider.addEventListener('pointermove', e => {
+  handle.addEventListener('pointermove', e => {
     if (!active) return;
-    if (!directionLocked) {
-      const dx = Math.abs(e.clientX - startX);
-      const dy = Math.abs(e.clientY - startY);
-      if (dx + dy < 8) return;            // wait for clear intent
-      if (dy >= dx) {                     // vertical-ish → let page scroll
-        active = false;
-        return;
-      }
-      directionLocked = true;             // horizontal → slider owns it
-      try { slider.setPointerCapture(e.pointerId); } catch (_) {}
-      setPosition(e.clientX);
-    } else {
-      setPosition(e.clientX);
-      if (e.cancelable) e.preventDefault();
-    }
-  }, { passive: false });
-  slider.addEventListener('pointerup', () => active = false);
-  slider.addEventListener('pointercancel', () => active = false);
+    setPosition(e.clientX);
+  });
+  handle.addEventListener('pointerup', e => {
+    active = false;
+    try { handle.releasePointerCapture(e.pointerId); } catch (_) {}
+  });
+  handle.addEventListener('pointercancel', () => { active = false; });
+  // Click anywhere on the image to jump the slider to that point (desktop + tap)
+  slider.addEventListener('click', e => {
+    if (e.target.closest('.handle')) return;
+    setPosition(e.clientX);
+  });
 
   // Init sizing
   function initSize() {
