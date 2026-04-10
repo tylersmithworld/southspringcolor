@@ -311,8 +311,10 @@
     .mobile-tagline p {
       font-size: 0.9rem; color: var(--text-secondary); margin-top: 0.3rem;
     }
+    .slider-sections .hero { display: none; }
     .slider-sections .vert-section { order: 2; padding-top: 0.5rem; }
     .slider-sections .wide-slider-section { order: 3; }
+    .mobile-hide { display: none !important; }
     .hero-overlay { display: none; }
     .vert-grid { grid-template-columns: 1fr; max-width: 400px; margin: 0 auto; gap: 0.75rem; }
     .services-grid { grid-template-columns: 1fr; max-width: 380px; margin: 0 auto; }
@@ -339,17 +341,24 @@
   <p>Professional Color Grading</p>
 </div>
 
-<!-- VERTICAL — lunar car (static slider) -->
-<section class="section vert-section" style="padding-top:0.75rem; padding-bottom:1rem;">
-  <div class="vert-grid">
-    <div class="ba-slider" data-mode="static" style="border-radius:10px;">
-      <img class="base-img" src="lunar%20color%20lumix.jpg" alt="Graded">
+<!-- HERO — AD desert motorcycle (frame-advance slider) -->
+<section class="hero">
+  <div class="hero-slider-wrap">
+    <div class="ba-slider" data-mode="sequence"
+         data-graded-path="AD seq color/loop"
+         data-ungraded-path="AD Seq no color/loop"
+         data-frames="100,107,114,121,128,135,142" data-ext=".jpg">
+      <img class="base-img frame-seq active" src="AD%20seq%20color/loop100.jpg" alt="Graded">
       <div class="before-wrap">
-        <img src="lunar%20no%20color%20lumix.jpg" alt="Ungraded">
+        <img class="frame-seq active" src="AD%20Seq%20no%20color/loop100.jpg" alt="Ungraded">
       </div>
       <div class="handle"><span class="arrows">◂ ▸</span></div>
       <span class="label label-after">Graded</span>
       <span class="label label-before">Ungraded</span>
+    </div>
+    <div class="hero-overlay">
+      <h1>From flat to final.</h1>
+      <p>Professional Color Grading</p>
     </div>
   </div>
 </section>
@@ -367,6 +376,30 @@
     <div class="handle"><span class="arrows">◂ ▸</span></div>
     <span class="label label-after">Graded</span>
     <span class="label label-before">Ungraded</span>
+  </div>
+</section>
+
+<!-- VERTICAL SLIDERS (side by side on desktop) -->
+<section class="section vert-section" style="padding-top:0.75rem; padding-bottom:1rem;">
+  <div class="vert-grid">
+    <div class="ba-slider mobile-hide" data-mode="static" style="border-radius:10px;">
+      <img class="base-img" src="IMG_8167.00_00_04_07.Still001.jpg" alt="Graded">
+      <div class="before-wrap">
+        <img src="IMG_8167.00_00_04_07.Still002.jpg" alt="Ungraded">
+      </div>
+      <div class="handle"><span class="arrows">◂ ▸</span></div>
+      <span class="label label-after">Graded</span>
+      <span class="label label-before">Ungraded</span>
+    </div>
+    <div class="ba-slider" data-mode="static" style="border-radius:10px;">
+      <img class="base-img" src="lunar%20color%20lumix.jpg" alt="Graded">
+      <div class="before-wrap">
+        <img src="lunar%20no%20color%20lumix.jpg" alt="Ungraded">
+      </div>
+      <div class="handle"><span class="arrows">◂ ▸</span></div>
+      <span class="label label-after">Graded</span>
+      <span class="label label-before">Ungraded</span>
+    </div>
   </div>
 </section>
 
